@@ -22,6 +22,16 @@ export default class Title extends Phaser.Scene
         this.pressText = this.add.text(width / 2, height / 2, 'PRESS ANY KEY', {fontFamily: 'CustomFont'})
             .setFontSize(50)
             .setOrigin(0.5)
+
+        this.input.keyboard.on('keydown', () => {
+            this.cameras.main.fadeOut()
+        })
+
+        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+            this.time.delayedCall(1000, () => {
+                this.scene.start(SceneKeys.CharacterSelect)
+            })
+        })
     }
 
     update(time: number, delta: number): void 
