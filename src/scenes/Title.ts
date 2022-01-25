@@ -1,0 +1,31 @@
+import SceneKeys from "~/consts/SceneKeys";
+import TextureKeys from "~/consts/TextureKeys";
+
+export default class Title extends Phaser.Scene
+{
+    private background!: Phaser.GameObjects.TileSprite
+    private pressText!: Phaser.GameObjects.Text
+
+    constructor()
+    {
+        super(SceneKeys.Title)
+    }
+
+    create()
+    {
+        const width = this.scale.width
+        const height = this.scale.height
+
+        this.background = this.add.tileSprite(0, 0, width, height, TextureKeys.Background).setOrigin(0)
+        this.add.image(width / 2, 300, TextureKeys.LOGO)
+
+        this.pressText = this.add.text(width / 2, height / 2, 'PRESS ANY KEY', {fontFamily: 'CustomFont'})
+            .setFontSize(50)
+            .setOrigin(0.5)
+    }
+
+    update(time: number, delta: number): void 
+    {
+        this.background.tilePositionY += 0.5
+    }
+}
