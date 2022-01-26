@@ -23,6 +23,14 @@ export default class Title extends Phaser.Scene
             .setFontSize(50)
             .setOrigin(0.5)
 
+        this.tweens.add({
+            targets: this.pressText,
+            alpha: 0.3,
+            duration: 1500,
+            yoyo: true,
+            repeat: -1
+        })
+
         this.input.keyboard.on('keydown', () => {
             this.cameras.main.fadeOut()
         })
