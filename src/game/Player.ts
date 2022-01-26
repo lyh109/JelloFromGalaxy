@@ -1,6 +1,5 @@
 export default class Player extends Phaser.Physics.Matter.Image
 {
-    private img!: Phaser.GameObjects.Image
     private worldWidth!: number
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame: string)

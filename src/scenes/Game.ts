@@ -2,6 +2,7 @@ import SceneKeys from "~/consts/SceneKeys"
 import TextureKeys from "~/consts/TextureKeys"
 
 import Player from "~/game/Player"
+import Enemy from "~/game/Enemy"
 
 export default class Game extends Phaser.Scene
 {
@@ -10,6 +11,8 @@ export default class Game extends Phaser.Scene
 
     private player!: Player
     private PlayerController!: Phaser.Types.Input.Keyboard.CursorKeys
+
+    private enemies: Enemy[] = []
 
     constructor()
     {
@@ -42,8 +45,10 @@ export default class Game extends Phaser.Scene
         })
 
         const objectData = this.cache.json.get('object')
-        console.log(objectData[0].name)
-        
+        for(let o of objectData)
+        {
+            this.enemies.push(new Enemy(this, o.x, o.y, TextureKeys.SHIP_BLUE))
+        }
     }
 
     update(time: number, delta: number): void 
