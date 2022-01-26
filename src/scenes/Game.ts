@@ -14,9 +14,8 @@ export default class Game extends Phaser.Scene
     /**
 	 * @param {{ character: string }} data 
 	 */
-
     init(data)
-    {   
+    {
         this.selectedCharacter = data.character
     }
 
@@ -28,6 +27,8 @@ export default class Game extends Phaser.Scene
         const height = this.scale.height
 
         this.background = this.add.tileSprite(0, 0, width, height, TextureKeys.Background).setOrigin(0)
+
+        this.add.image(width / 2, 150, TextureKeys.SPACESHIP, this.selectedCharacter)
     }
 
     update(time: number, delta: number): void 

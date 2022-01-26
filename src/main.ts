@@ -4,6 +4,7 @@ import 'phaser/plugins/spine/dist/SpinePlugin'
 import Preloader from './scenes/Preloader'
 import Title from './scenes/Title'
 import CharacterSelect from './scenes/CharacterSelect'
+import Game from './scenes/Game'
 
 const config: Phaser.Types.Core.GameConfig = {
     type: Phaser.AUTO,
@@ -15,7 +16,7 @@ const config: Phaser.Types.Core.GameConfig = {
             debug: true
         }
     },
-    scene: [Preloader, Title, CharacterSelect],
+    scene: [Preloader, Title, CharacterSelect, Game],
     plugins: {
         scene: [
             { key: 'SpinePlugin', plugin: window.SpinePlugin, mapping: 'spine'}

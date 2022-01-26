@@ -39,7 +39,12 @@ export default class CharacterSelect extends Phaser.Scene
             this.selectKey = frame
             console.log(this.selectKey)
         })
-        
+
+        this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+            this.time.delayedCall(1000, () => {
+                this.scene.start(SceneKeys.Game, {character: this.selectKey})
+            })
+        }) 
     }
 
     update(time: number, delta: number): void 
