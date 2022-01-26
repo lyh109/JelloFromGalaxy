@@ -20,7 +20,7 @@ export default class SelectImage extends Phaser.GameObjects.Container
 
         this.img.on('pointerdown', () => {
             // TODO: 효과음 재생
-            console.log('pointerdown')
+            this.scene.events.emit('pointerdown', frame)
         })
     }
 }

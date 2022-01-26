@@ -9,6 +9,8 @@ export default class CharacterSelect extends Phaser.Scene
     private background!: Phaser.GameObjects.TileSprite
     private playerImages: SelectImage[] = []
 
+    private selectKey!: string
+
     constructor()
     {
         super(SceneKeys.CharacterSelect)
@@ -30,7 +32,14 @@ export default class CharacterSelect extends Phaser.Scene
         this.playerImages.push(new SelectImage(this, width / 4 * 3, height / 3, TextureKeys.SPACESHIP, frames[ShipKeys.BLUE]))
         this.playerImages.push(new SelectImage(this, width / 2, height / 3 * 1.5, TextureKeys.SPACESHIP, frames[ShipKeys.GREEN]))
         this.playerImages.push(new SelectImage(this, width / 4, height / 3 * 2, TextureKeys.SPACESHIP, frames[ShipKeys.PINK]))
-        this.playerImages.push(new SelectImage(this, width / 4 * 3, height / 3 * 2, TextureKeys.SPACESHIP, frames[ShipKeys.YELLOW]))    
+        this.playerImages.push(new SelectImage(this, width / 4 * 3, height / 3 * 2, TextureKeys.SPACESHIP, frames[ShipKeys.YELLOW]))
+        
+        this.events.on('pointerdown', (frame: string) => {
+            this.cameras.main.fadeOut()
+            this.selectKey = frame
+            console.log(this.selectKey)
+        })
+        
     }
 
     update(time: number, delta: number): void 
