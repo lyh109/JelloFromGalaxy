@@ -2,9 +2,12 @@ import SceneKeys from "~/consts/SceneKeys";
 import TextureKeys from "~/consts/TextureKeys";
 import ShipKeys from "~/consts/ShipKeys";
 
+import SelectImage from "~/game/SelectImage";
+
 export default class CharacterSelect extends Phaser.Scene
 {
     private background!: Phaser.GameObjects.TileSprite
+    private playerImages: SelectImage[] = []
 
     constructor()
     {
@@ -20,16 +23,14 @@ export default class CharacterSelect extends Phaser.Scene
 
         this.background = this.add.tileSprite(0, 0, width, height, TextureKeys.Background).setOrigin(0)
 
-        var atlasTexture = this.textures.get(TextureKeys.SPACESHIP)
-        var frames = atlasTexture.getFrameNames()
+        const atlasTexture = this.textures.get(TextureKeys.SPACESHIP)
+        const frames = atlasTexture.getFrameNames()
 
-        var beige = this.add.image(width / 4, height / 3, TextureKeys.SPACESHIP, frames[ShipKeys.BEIGE]).setInteractive()
-        var blue = this.add.image(width / 4 * 3, height / 3, TextureKeys.SPACESHIP, frames[ShipKeys.BLUE]).setInteractive()
-        var green = this.add.image(width / 2, height / 3 * 1.5, TextureKeys.SPACESHIP, frames[ShipKeys.GREEN]).setInteractive()
-        var pink = this.add.image(width / 4, height / 3 * 2, TextureKeys.SPACESHIP, frames[ShipKeys.PINK]).setInteractive()
-        var yellow = this.add.image(width / 4 * 3, height / 3 * 2, TextureKeys.SPACESHIP, frames[ShipKeys.YELLOW]).setInteractive()
-
-        
+        this.playerImages.push(new SelectImage(this, width / 4, height / 3, TextureKeys.SPACESHIP, frames[ShipKeys.BEIGE]))
+        this.playerImages.push(new SelectImage(this, width / 4 * 3, height / 3, TextureKeys.SPACESHIP, frames[ShipKeys.BLUE]))
+        this.playerImages.push(new SelectImage(this, width / 2, height / 3 * 1.5, TextureKeys.SPACESHIP, frames[ShipKeys.GREEN]))
+        this.playerImages.push(new SelectImage(this, width / 4, height / 3 * 2, TextureKeys.SPACESHIP, frames[ShipKeys.PINK]))
+        this.playerImages.push(new SelectImage(this, width / 4 * 3, height / 3 * 2, TextureKeys.SPACESHIP, frames[ShipKeys.YELLOW]))    
     }
 
     update(time: number, delta: number): void 
