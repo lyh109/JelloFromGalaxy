@@ -1,8 +1,8 @@
-import SceneKeys from "~/consts/SceneKeys";
-import TextureKeys from "~/consts/TextureKeys";
-import ShipKeys from "~/consts/ShipKeys";
+import SceneKeys from "~/consts/SceneKeys"
+import TextureKeys from "~/consts/TextureKeys"
+import ShipKeys from "~/consts/ShipKeys"
 
-import SelectImage from "~/game/SelectImage";
+import SelectImage from "~/game/SelectImage"
 
 export default class CharacterSelect extends Phaser.Scene
 {

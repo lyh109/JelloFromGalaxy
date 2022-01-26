@@ -1,5 +1,5 @@
-import SceneKeys from "~/consts/SceneKeys";
-import TextureKeys from "~/consts/TextureKeys";
+import SceneKeys from "~/consts/SceneKeys"
+import TextureKeys from "~/consts/TextureKeys"
 
 export default class Title extends Phaser.Scene
 {
