@@ -40,6 +40,10 @@ export default class Game extends Phaser.Scene
         this.input.keyboard.on('keydown-ESC', () => {
             this.events.emit('pause')
         })
+
+        const objectData = this.cache.json.get('object')
+        console.log(objectData[0].name)
+        
     }
 
     update(time: number, delta: number): void 

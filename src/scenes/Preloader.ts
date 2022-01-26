@@ -14,6 +14,10 @@ export default class Preloader extends Phaser.Scene
 
         this.load.image(TextureKeys.Background, 'bg/blue.png')
         this.load.image(TextureKeys.LOGO, 'bg/logo.png')
+
+        this.load.image(TextureKeys.SHIP_BLUE, 'enemies/Ship_blue.png')
+
+        this.load.json('object', 'map/objects0.json')
     }
 
     create()

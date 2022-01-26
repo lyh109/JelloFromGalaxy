@@ -1,0 +1,62 @@
+[
+  {
+    "height": 0,
+    "id": 3,
+    "name": "s0",
+    "point": true,
+    "rotation": 0,
+    "type": "",
+    "visible": true,
+    "width": 0,
+    "x": 64,
+    "y": 936
+  },
+  {
+    "height": 0,
+    "id": 4,
+    "name": "s0",
+    "point": true,
+    "rotation": 0,
+    "type": "",
+    "visible": true,
+    "width": 0,
+    "x": 192,
+    "y": 936
+  },
+  {
+    "height": 0,
+    "id": 5,
+    "name": "s0",
+    "point": true,
+    "rotation": 0,
+    "type": "",
+    "visible": true,
+    "width": 0,
+    "x": 320,
+    "y": 936
+  },
+  {
+    "height": 0,
+    "id": 6,
+    "name": "s0",
+    "point": true,
+    "rotation": 0,
+    "type": "",
+    "visible": true,
+    "width": 0,
+    "x": 448,
+    "y": 936
+  },
+  {
+    "height": 0,
+    "id": 7,
+    "name": "s0",
+    "point": true,
+    "rotation": 0,
+    "type": "",
+    "visible": true,
+    "width": 0,
+    "x": 576,
+    "y": 936
+  }
+]
