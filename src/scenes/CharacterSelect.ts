@@ -37,7 +37,6 @@ export default class CharacterSelect extends Phaser.Scene
         this.events.on('pointerdown', (frame: string) => {
             this.cameras.main.fadeOut()
             this.selectKey = frame
-            console.log(this.selectKey)
         })
 
         this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
