@@ -26,6 +26,7 @@ export default class Game extends Phaser.Scene
 
     create()
     {
+        this.scene.launch(SceneKeys.Pause)
         this.cameras.main.fadeIn()
 
         const width = this.scale.width
@@ -35,6 +36,10 @@ export default class Game extends Phaser.Scene
 
         this.player = new Player(this, width / 2, 150, TextureKeys.SPACESHIP, this.selectedCharacter)
         this.PlayerController = this.input.keyboard.createCursorKeys()
+
+        this.input.keyboard.on('keydown-ESC', () => {
+            this.events.emit('pause')
+        })
     }
 
     update(time: number, delta: number): void 
