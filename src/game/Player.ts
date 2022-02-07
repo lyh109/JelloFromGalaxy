@@ -1,7 +1,13 @@
+import { Tweens } from "phaser"
+
 export default class Player extends Phaser.Physics.Matter.Image
 {
     private worldWidth!: number
+    private initY: number
 
+    private maxEnergyNum: number = 5
+    private energyNum: number = this.maxEnergyNum
+    
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame: string)
     {
         super(scene.matter.world, x, y, texture, frame)
@@ -9,7 +15,24 @@ export default class Player extends Phaser.Physics.Matter.Image
         scene.add.existing(this)
         this.scene = scene
         this.worldWidth = scene.scale.width
-        this.setStatic(true)
+        this.initY = y
+
+        this.setIgnoreGravity(true)
+    }
+
+    getMaxEnergyNum()
+    {
+        return this.maxEnergyNum
+    }
+
+    getEnergyNum()
+    {
+        return this.energyNum
+    }
+
+    setEnergyNum(num: number)
+    {
+        this.energyNum = num
     }
 
     MoveLeft()
@@ -40,6 +63,8 @@ export default class Player extends Phaser.Physics.Matter.Image
 
     Idle()
     {
+        this.y = this.initY
+
         if(this.rotation > 0)
         {
             this.rotation -= 0.01

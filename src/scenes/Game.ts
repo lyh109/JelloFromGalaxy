@@ -13,6 +13,7 @@ export default class Game extends Phaser.Scene
 
     private player!: Player
     private PlayerController!: Phaser.Types.Input.Keyboard.CursorKeys
+    private playerEnergy: Phaser.GameObjects.Image[] = []
     private laserGroup?: LaserPool
 
     private enemies: Enemy[] = []
@@ -35,6 +36,23 @@ export default class Game extends Phaser.Scene
         }
 
         return laser
+    }
+
+    private updateEnergy = (num: number) =>
+    {
+        this.player.setEnergyNum(num)
+
+        for(let i = 0; i < this.player.getMaxEnergyNum(); ++i)
+        {
+            if(i < this.player.getEnergyNum())
+            {
+                this.playerEnergy[i].setTexture(TextureKeys.ENERGY)
+            }
+            else
+            {
+                this.playerEnergy[i].setTexture(TextureKeys.ENERGY_BLANK)
+            }
+        }
     }
 
     constructor()
@@ -62,6 +80,13 @@ export default class Game extends Phaser.Scene
 
         this.player = new Player(this, width / 2, 150, TextureKeys.SPACESHIP, this.selectedCharacter)
         this.PlayerController = this.input.keyboard.createCursorKeys()
+
+        for(let i = 0; i < this.player.getEnergyNum(); ++i)
+        {
+            let e = this.add.image(i * 20 + 20, 80, TextureKeys.ENERGY)
+            this.playerEnergy.push(e)
+        }
+
         this.laserGroup = new LaserPool(this)
 
         // PAUSE
@@ -74,7 +99,12 @@ export default class Game extends Phaser.Scene
         const objectData = this.cache.json.get('object')
         for(let o of objectData)
         {
-            const enemy = new Enemy(this, o.x, o.y, TextureKeys.SHIP_BLUE)
+            let enemy = new Enemy(this, o.x, o.y)
+            if(o.name[1] == 1)
+            {
+                enemy.setTexture(TextureKeys.ENERGY)
+            }
+
             enemy.setCollisionCategory(this.enemyCat)
             this.enemies.push(enemy)
         }
@@ -82,17 +112,22 @@ export default class Game extends Phaser.Scene
         this.player.setCollidesWith(this.enemyCat)
 
         this.matter.world.on('collisionstart', (event) => {
-            if(event.pairs[0].bodyB.gameObject.texture.key == TextureKeys.SHIP_BLUE)
+            if(event.pairs[0].bodyB.gameObject.texture.key[0] == 'S')
             {
-                console.log('collide')
                 event.pairs[0].bodyB.gameObject.despawn()
+                this.updateEnergy(this.player.getEnergyNum() - 1)
+            }
+            else if(event.pairs[0].bodyB.gameObject.texture.key[0] == 'L')
+            {
+                event.pairs[0].bodyA.gameObject.updateHP()
+                this.laserGroup?.despawn(event.pairs[0].bodyB.gameObject)
             }
         })
     }
 
     update(time: number, delta: number): void 
     {
-        this.background.tilePositionY += 0.5
+        this.background.tilePositionY += 1
 
         if(this.PlayerController.left.isDown)
         {
