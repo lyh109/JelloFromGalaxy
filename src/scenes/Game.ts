@@ -2,6 +2,8 @@ import SceneKeys from "~/consts/SceneKeys"
 import TextureKeys from "~/consts/TextureKeys"
 
 import Player from "~/game/Player"
+import LaserPool from "~/game/Laser"
+
 import Enemy from "~/game/Enemy"
 
 export default class Game extends Phaser.Scene
@@ -11,8 +13,27 @@ export default class Game extends Phaser.Scene
 
     private player!: Player
     private PlayerController!: Phaser.Types.Input.Keyboard.CursorKeys
+    private laserGroup?: LaserPool
 
     private enemies: Enemy[] = []
+
+    private enemyCat: any
+
+    private spawnLaser(x: number, y: number)
+    {
+        if(!this.laserGroup)
+        {
+            return
+        }
+
+        const laser = this.laserGroup.spawn(x, y, TextureKeys.LASER1)
+        if(!laser)
+        {
+            return
+        }
+
+        return laser
+    }
 
     constructor()
     {
@@ -39,16 +60,31 @@ export default class Game extends Phaser.Scene
 
         this.player = new Player(this, width / 2, 150, TextureKeys.SPACESHIP, this.selectedCharacter)
         this.PlayerController = this.input.keyboard.createCursorKeys()
+        this.laserGroup = new LaserPool(this)
 
         this.input.keyboard.on('keydown-ESC', () => {
             this.events.emit('pause')
         })
 
+        // 48~64 임시 충돌체크
+        this.enemyCat = this.matter.world.nextCategory()
         const objectData = this.cache.json.get('object')
         for(let o of objectData)
         {
-            this.enemies.push(new Enemy(this, o.x, o.y, TextureKeys.SHIP_BLUE))
+            const enemy = new Enemy(this, o.x, o.y, TextureKeys.SHIP_BLUE)
+            enemy.setCollisionCategory(this.enemyCat)
+            this.enemies.push(enemy)
         }
+
+        this.player.setCollidesWith(this.enemyCat)
+
+        this.matter.world.on('collisionstart', (event) => {
+            if(event.pairs[0].bodyB.gameObject.texture.key == TextureKeys.SHIP_BLUE)
+            {
+                console.log('collide')
+                event.pairs[0].bodyB.gameObject.despawn()
+            }
+        })
     }
 
     update(time: number, delta: number): void 
@@ -68,9 +104,23 @@ export default class Game extends Phaser.Scene
             this.player.Idle()
         }
 
-        if(this.PlayerController.space.isDown)
+        if(Phaser.Input.Keyboard.JustDown(this.PlayerController.space))
         {
             // TODO: 공격 함수 추가
+            if(!this.laserGroup)
+            {
+                return
+            }
+
+            this.spawnLaser(this.player.x, this.player.y + this.player.height / 2 + 10)
+        }
+
+        for(const o of this.enemies)
+        {  
+            if(o.isCollided)
+                o.destroy()
+            else
+                o.update()
         }
     }
 }

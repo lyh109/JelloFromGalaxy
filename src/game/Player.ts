@@ -9,6 +9,7 @@ export default class Player extends Phaser.Physics.Matter.Image
         scene.add.existing(this)
         this.scene = scene
         this.worldWidth = scene.scale.width
+        this.setStatic(true)
     }
 
     MoveLeft()

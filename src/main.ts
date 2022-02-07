@@ -15,7 +15,7 @@ const config: Phaser.Types.Core.GameConfig = {
         default: 'matter',
         matter: {
             debug: true,
-            gravity: { y: 0}
+            gravity: { y: 10 }
         }
     },
     scene: [Preloader, Title, CharacterSelect, Game, Pause],
