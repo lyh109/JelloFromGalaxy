@@ -4,7 +4,7 @@ enum TextureKeys
     LOGO = 'logo',
     BLACK = 'black',
 
-    SPACESHIP = 'spaceship',
+    SPACESHIP = 'Player',
     SHIP_BLUE1 = 'Ship-blue1',
     SHIP_BLUE2 = 'Ship-blue2',
     SHIP_BLUE3 = 'Ship-blue3',
@@ -31,13 +31,13 @@ enum TextureKeys
     ENERGY = 'energy',
     ENERGY_BLANK = 'energy-blank',
 
-    PILL = 'pill',
-    POWERUP = 'powerup',
-    SHIELD = 'shield',
-    
-    STAR_BRONZE = 'star-bronze',
-    STAR_SILVER = 'star-silver',
-    STAR_GOLD = 'star-gold'
+    PILL = 'I_pill',
+    POWERUP = 'I_powerup',
+    SHIELD = 'I_shield',
+
+    STAR_BRONZE = 'I_star-bronze',
+    STAR_SILVER = 'I_star-silver',
+    STAR_GOLD = 'I_star-gold'
 }
 
 export default TextureKeys

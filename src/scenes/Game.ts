@@ -17,11 +17,13 @@ export default class Game extends Phaser.Scene
     private PlayerController!: Phaser.Types.Input.Keyboard.CursorKeys
     private playerEnergy: Phaser.GameObjects.Image[] = []
     private laserGroup?: LaserPool
+    private playerCat: any
 
     private enemies: Enemy[] = []
     private enemyCat: any
 
     private items: Item[] = []
+    private itemCat: any
 
     private score: number = 0
     private scoreText!: Phaser.GameObjects.Text
@@ -36,6 +38,8 @@ export default class Game extends Phaser.Scene
         }
 
         const laser = this.laserGroup.spawn(x, y, texKey)
+        laser.setCollidesWith(this.enemyCat)
+
         if(!laser)
         {
             return
@@ -69,7 +73,48 @@ export default class Game extends Phaser.Scene
 
     private spawnItem = (x: number, y: number) =>
     {
+        if(Phaser.Math.Between(1, 10) <= 6)
+        {
+            let item = new Item(this, x, y, TextureKeys.PILL)
+            item.setCollisionCategory(this.itemCat)
+            item.setCollidesWith(this.playerCat)
+            this.items.push(item)
+        }
 
+        if(Phaser.Math.Between(1, 10) <= 6)
+        {
+            let item = new Item(this, x, y, TextureKeys.POWERUP)
+            item.setCollisionCategory(this.itemCat)
+            this.items.push(item)
+        }
+
+        if(Phaser.Math.Between(1, 10) <= 3)
+        {
+            let item = new Item(this, x, y, TextureKeys.SHIELD)
+            item.setCollisionCategory(this.itemCat)
+            this.items.push(item)
+        }
+
+        if(Phaser.Math.Between(1, 10) <= 5)
+        {
+            let item = new Item(this, x, y, TextureKeys.STAR_BRONZE)
+            item.setCollisionCategory(this.itemCat)
+            this.items.push(item)
+        }
+        
+        if(Phaser.Math.Between(1, 10) <= 3)
+        {
+            let item = new Item(this, x, y, TextureKeys.STAR_SILVER)
+            item.setCollisionCategory(this.itemCat)
+            this.items.push(item)
+        }
+
+        if(Phaser.Math.Between(1, 10) <= 1)
+        {
+            let item = new Item(this, x, y, TextureKeys.STAR_GOLD)
+            item.setCollisionCategory(this.itemCat)
+            this.items.push(item)
+        }
     }
 
     private destroyEnemy = (num: number, x: number, y: number) =>
@@ -114,8 +159,12 @@ export default class Game extends Phaser.Scene
         // IncreaseScore
         this.events.on('DestroyEnemy', this.destroyEnemy)
 
-        // 48~64 임시 충돌체크
+        this.playerCat = this.matter.world.nextCategory()
         this.enemyCat = this.matter.world.nextCategory()
+        this.itemCat = this.matter.world.nextCategory()
+
+        this.player.setCollisionCategory(this.playerCat)
+
         const objectData = this.cache.json.get('object')
         for(let o of objectData)
         {
@@ -141,10 +190,11 @@ export default class Game extends Phaser.Scene
             this.enemies.push(enemy)
         }
 
-        this.player.setCollidesWith(this.enemyCat)
+        this.player.setCollidesWith([this.enemyCat, this.itemCat])
 
         this.matter.world.on('collisionstart', (event) => {
-            if(event.pairs[0].bodyB.gameObject.texture.key[0] == 'S')
+            if(event.pairs[0].bodyA.gameObject.texture.key[0] == 'P'
+                &&event.pairs[0].bodyB.gameObject.texture.key[0] == 'S')
             {
                 event.pairs[0].bodyB.gameObject.despawn()
                 this.updateEnergy(this.player.getEnergyNum() - 1)
@@ -154,6 +204,14 @@ export default class Game extends Phaser.Scene
             {
                 event.pairs[0].bodyA.gameObject.updateHP()
                 this.laserGroup?.despawn(event.pairs[0].bodyB.gameObject)
+            }
+            else if(event.pairs[0].bodyA.gameObject.texture.key[0] == 'P'
+                    && event.pairs[0].bodyB.gameObject.texture.key[0] == 'I')
+            {
+                // TODO: Item 획득 구현
+                event.pairs[0].bodyB.gameObject.despawn()
+                if(event.pairs[0].bodyB.gameObject.name == TextureKeys.STAR_GOLD)
+                    console.log(event.pairs[0].bodyB.gameObject.name)
             }
         })
 
