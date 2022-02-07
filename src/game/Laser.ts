@@ -8,7 +8,6 @@ class Laser extends Phaser.Physics.Matter.Image
 
         scene.add.existing(this)
         this.scene = scene
-        // this.setStatic(true)
     }
 }
 
@@ -66,8 +65,3 @@ export default class LaserPool extends Phaser.GameObjects.Group
         })
     }
 }
-
-// Phaser.GameObjects.GameObjectFactory.register('laserPool', function(){
-//     // @ts-ignore
-//     return this.updateList.add(new LaserPool(this.scene));
-// })
