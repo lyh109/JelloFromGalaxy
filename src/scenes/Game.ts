@@ -28,8 +28,6 @@ export default class Game extends Phaser.Scene
     private score: number = 0
     private scoreText!: Phaser.GameObjects.Text
 
-    AttackCount = 0
-
     private spawnLaser(x: number, y: number, texKey: string)
     {
         if(!this.laserGroup)
@@ -50,7 +48,14 @@ export default class Game extends Phaser.Scene
 
     private updateEnergy = (num: number) =>
     {
-        this.player.setEnergyNum(num)
+        if(num <= this.player.getMaxEnergyNum())
+        {
+            this.player.setEnergyNum(num)
+        }
+        else
+        {
+            this.addScore(5)
+        }
 
         for(let i = 0; i < this.player.getMaxEnergyNum(); ++i)
         {
@@ -61,6 +66,37 @@ export default class Game extends Phaser.Scene
             else
             {
                 this.playerEnergy[i].setTexture(TextureKeys.ENERGY_BLANK)
+            }
+        }
+    }
+
+    private getItem(name: string)
+    {
+        switch(name)
+        {
+            case TextureKeys.PILL: {
+                this.updateEnergy(this.player.getEnergyNum() + 1)
+                break
+            }
+            case TextureKeys.POWERUP: {
+                // TODO: PowerUP 아이템 효과 구현
+                break
+            }
+            case TextureKeys.SHIELD: {
+                // TODO: Shield 아이템 효과 구현
+                break
+            }
+            case TextureKeys.STAR_BRONZE: {
+                this.addScore(10)
+                break
+            }
+            case TextureKeys.STAR_SILVER: {
+                this.addScore(30)
+                break
+            }
+            case TextureKeys.STAR_GOLD: {
+                this.addScore(50)
+                break
             }
         }
     }
@@ -208,10 +244,8 @@ export default class Game extends Phaser.Scene
             else if(event.pairs[0].bodyA.gameObject.texture.key[0] == 'P'
                     && event.pairs[0].bodyB.gameObject.texture.key[0] == 'I')
             {
-                // TODO: Item 획득 구현
                 event.pairs[0].bodyB.gameObject.despawn()
-                if(event.pairs[0].bodyB.gameObject.name == TextureKeys.STAR_GOLD)
-                    console.log(event.pairs[0].bodyB.gameObject.name)
+                this.getItem(event.pairs[0].bodyB.gameObject.name)
             }
         })
 
