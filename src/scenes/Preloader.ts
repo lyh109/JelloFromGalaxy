@@ -42,6 +42,14 @@ export default class Preloader extends Phaser.Scene
         this.load.image(TextureKeys.ENERGY, 'ui/squareBlue.png')
         this.load.image(TextureKeys.ENERGY_BLANK, 'ui/square_shadow.png')
 
+        this.load.image(TextureKeys.PILL, 'items/pill_blue.png')
+        this.load.image(TextureKeys.POWERUP, 'items/powerupBlue_bolt.png')
+        this.load.image(TextureKeys.SHIELD, 'items/powerupBlue_shield.png')
+        
+        this.load.image(TextureKeys.STAR_BRONZE, 'items/star_bronze.png')
+        this.load.image(TextureKeys.STAR_SILVER, 'items/star_silver.png')
+        this.load.image(TextureKeys.STAR_GOLD, 'items/star_gold.png')
+
         this.load.json('object', 'map/objects0.json')
     }
 

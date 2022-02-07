@@ -6,6 +6,8 @@ import LaserPool from "~/game/Laser"
 
 import Enemy from "~/game/Enemy"
 
+import Item from "~/game/Item"
+
 export default class Game extends Phaser.Scene
 {
     private background!: Phaser.GameObjects.TileSprite
@@ -18,6 +20,8 @@ export default class Game extends Phaser.Scene
 
     private enemies: Enemy[] = []
     private enemyCat: any
+
+    private items: Item[] = []
 
     private score: number = 0
     private scoreText!: Phaser.GameObjects.Text
@@ -63,6 +67,17 @@ export default class Game extends Phaser.Scene
         this.scoreText.setText('SCORE: ' + this.score)
     }
 
+    private spawnItem = (x: number, y: number) =>
+    {
+
+    }
+
+    private destroyEnemy = (num: number, x: number, y: number) =>
+    {
+        this.addScore(num)
+        this.spawnItem(x, y)
+    }
+
     constructor()
     {
         super(SceneKeys.Game)
@@ -97,7 +112,7 @@ export default class Game extends Phaser.Scene
         })
 
         // IncreaseScore
-        this.events.on('IncreaseScore', this.addScore)
+        this.events.on('DestroyEnemy', this.destroyEnemy)
 
         // 48~64 임시 충돌체크
         this.enemyCat = this.matter.world.nextCategory()
@@ -134,7 +149,8 @@ export default class Game extends Phaser.Scene
                 event.pairs[0].bodyB.gameObject.despawn()
                 this.updateEnergy(this.player.getEnergyNum() - 1)
             }
-            else if(event.pairs[0].bodyB.gameObject.texture.key[0] == 'L')
+            else if(event.pairs[0].bodyA.gameObject.texture.key[0] == 'S'
+                    && event.pairs[0].bodyB.gameObject.texture.key[0] == 'L')
             {
                 event.pairs[0].bodyA.gameObject.updateHP()
                 this.laserGroup?.despawn(event.pairs[0].bodyB.gameObject)
@@ -178,12 +194,28 @@ export default class Game extends Phaser.Scene
             this.spawnLaser(this.player.x, this.player.y + this.player.height / 2 + 10, TextureKeys.LASER1)
         }
 
-        for(const o of this.enemies)
+        for(const e of this.enemies)
         {  
-            if(o.isCollided)
-                o.destroy()
+            if(e.IsCollided())
+            {
+                e.destroy()
+            }
             else
-                o.update()
+            {
+                e.update()
+            }    
+        }
+
+        for(const i of this.items)
+        {
+            if(i.IsCollided())
+            {
+                i.destroy()
+            }
+            else
+            {
+                i.update()
+            }
         }
     }
 }

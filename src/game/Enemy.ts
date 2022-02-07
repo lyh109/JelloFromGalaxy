@@ -47,6 +47,11 @@ export default class Enemy extends Phaser.Physics.Matter.Image
         this.y -= 1
     }
 
+    IsCollided()
+    {
+        return this.isCollided
+    }
+
     despawn()
     {
         this.isCollided = true
@@ -63,7 +68,7 @@ export default class Enemy extends Phaser.Physics.Matter.Image
 
         if(this.hp == 0)
         {
-            this.scene.events.emit('IncreaseScore', 10 * this.maxHP)
+            this.scene.events.emit('DestroyEnemy', 10 * this.maxHP, this.x, this.y)
             this.despawn()
             return
         }
