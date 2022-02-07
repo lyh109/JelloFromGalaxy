@@ -19,14 +19,16 @@ export default class Game extends Phaser.Scene
 
     private enemyCat: any
 
-    private spawnLaser(x: number, y: number)
+    AttackCount = 0
+
+    private spawnLaser(x: number, y: number, texKey: string)
     {
         if(!this.laserGroup)
         {
             return
         }
 
-        const laser = this.laserGroup.spawn(x, y, TextureKeys.LASER1)
+        const laser = this.laserGroup.spawn(x, y, texKey)
         if(!laser)
         {
             return
@@ -112,7 +114,7 @@ export default class Game extends Phaser.Scene
                 return
             }
 
-            this.spawnLaser(this.player.x, this.player.y + this.player.height / 2 + 10)
+            this.spawnLaser(this.player.x, this.player.y + this.player.height / 2 + 10, TextureKeys.LASER1)
         }
 
         for(const o of this.enemies)
