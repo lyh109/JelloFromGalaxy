@@ -41,6 +41,7 @@ export default class Enemy extends Phaser.Physics.Matter.Image
 
         if(this.hp == 0)
         {
+            this.scene.events.emit('IncreaseScore', 10 * this.maxHP)
             this.despawn()
             return
         }

@@ -17,8 +17,10 @@ export default class Game extends Phaser.Scene
     private laserGroup?: LaserPool
 
     private enemies: Enemy[] = []
-
     private enemyCat: any
+
+    private score: number = 0
+    private scoreText!: Phaser.GameObjects.Text
 
     AttackCount = 0
 
@@ -55,6 +57,12 @@ export default class Game extends Phaser.Scene
         }
     }
 
+    private addScore = (num: number) =>
+    {
+        this.score += num
+        this.scoreText.setText('SCORE: ' + this.score)
+    }
+
     constructor()
     {
         super(SceneKeys.Game)
@@ -81,12 +89,6 @@ export default class Game extends Phaser.Scene
         this.player = new Player(this, width / 2, 150, TextureKeys.SPACESHIP, this.selectedCharacter)
         this.PlayerController = this.input.keyboard.createCursorKeys()
 
-        for(let i = 0; i < this.player.getEnergyNum(); ++i)
-        {
-            let e = this.add.image(i * 20 + 20, 80, TextureKeys.ENERGY)
-            this.playerEnergy.push(e)
-        }
-
         this.laserGroup = new LaserPool(this)
 
         // PAUSE
@@ -94,16 +96,19 @@ export default class Game extends Phaser.Scene
             this.events.emit('pause')
         })
 
+        // IncreaseScore
+        this.events.on('IncreaseScore', this.addScore)
+
         // 48~64 임시 충돌체크
         this.enemyCat = this.matter.world.nextCategory()
         const objectData = this.cache.json.get('object')
         for(let o of objectData)
         {
             let enemy = new Enemy(this, o.x, o.y)
-            if(o.name[1] == 1)
-            {
-                enemy.setTexture(TextureKeys.ENERGY)
-            }
+            // if(o.name[1] == 1)
+            // {
+            //     enemy.setTexture(TextureKeys.ENERGY)
+            // }
 
             enemy.setCollisionCategory(this.enemyCat)
             this.enemies.push(enemy)
@@ -123,6 +128,15 @@ export default class Game extends Phaser.Scene
                 this.laserGroup?.despawn(event.pairs[0].bodyB.gameObject)
             }
         })
+
+        for(let i = 0; i < this.player.getEnergyNum(); ++i)
+        {
+            let e = this.add.image(i * 20 + 20, 80, TextureKeys.ENERGY)
+            this.playerEnergy.push(e)
+        }
+
+        this.scoreText = this.add.text(13, 25, 'SCORE: ' + this.score, {fontFamily: 'CustomFont'})
+            .setFontSize(30)
     }
 
     update(time: number, delta: number): void 
