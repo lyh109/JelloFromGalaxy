@@ -21,6 +21,21 @@ export default class Preloader extends Phaser.Scene
         this.load.image(TextureKeys.SHIP_BLUE3, 'enemies/Ship_blue_Damaged2.png')
         this.load.image(TextureKeys.SHIP_BLUE4, 'enemies/Ship_blue_Damaged3.png')
 
+        this.load.image(TextureKeys.SHIP_GREEN1, 'enemies/Ship_green.png')
+        this.load.image(TextureKeys.SHIP_GREEN2, 'enemies/Ship_green_Damaged1.png')
+        this.load.image(TextureKeys.SHIP_GREEN3, 'enemies/Ship_green_Damaged2.png')
+        this.load.image(TextureKeys.SHIP_GREEN4, 'enemies/Ship_green_Damaged3.png')
+
+        this.load.image(TextureKeys.SHIP_ORANGE1, 'enemies/Ship_orange.png')
+        this.load.image(TextureKeys.SHIP_ORANGE2, 'enemies/Ship_orange_Damaged1.png')
+        this.load.image(TextureKeys.SHIP_ORANGE3, 'enemies/Ship_orange_Damaged2.png')
+        this.load.image(TextureKeys.SHIP_ORANGE4, 'enemies/Ship_orange_Damaged3.png')
+
+        this.load.image(TextureKeys.SHIP_RED1, 'enemies/Ship_red.png')
+        this.load.image(TextureKeys.SHIP_RED2, 'enemies/Ship_red_Damaged1.png')
+        this.load.image(TextureKeys.SHIP_RED3, 'enemies/Ship_red_Damaged2.png')
+        this.load.image(TextureKeys.SHIP_RED4, 'enemies/Ship_red_Damaged3.png')
+
         this.load.image(TextureKeys.LASER1, 'laser/laserBlue1.png')
         this.load.image(TextureKeys.LASER2, 'laser/laserBlue2.png')
 

@@ -104,11 +104,23 @@ export default class Game extends Phaser.Scene
         const objectData = this.cache.json.get('object')
         for(let o of objectData)
         {
-            let enemy = new Enemy(this, o.x, o.y)
-            // if(o.name[1] == 1)
-            // {
-            //     enemy.setTexture(TextureKeys.ENERGY)
-            // }
+            let enemy
+            if(o.name[1] == 0)
+            {
+                enemy = new Enemy(this, o.x, o.y, TextureKeys.SHIP_BLUE1)
+            }
+            else if(o.name[1] == 1)
+            {
+                enemy = new Enemy(this, o.x, o.y, TextureKeys.SHIP_GREEN1)
+            }
+            else if(o.name[1] == 2)
+            {
+                enemy = new Enemy(this, o.x, o.y, TextureKeys.SHIP_ORANGE1)
+            }
+            else if(o.name[1] == 3)
+            {
+                enemy = new Enemy(this, o.x, o.y, TextureKeys.SHIP_RED1)
+            }
 
             enemy.setCollisionCategory(this.enemyCat)
             this.enemies.push(enemy)
