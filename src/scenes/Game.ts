@@ -64,6 +64,7 @@ export default class Game extends Phaser.Scene
         this.PlayerController = this.input.keyboard.createCursorKeys()
         this.laserGroup = new LaserPool(this)
 
+        // PAUSE
         this.input.keyboard.on('keydown-ESC', () => {
             this.events.emit('pause')
         })
@@ -108,7 +109,6 @@ export default class Game extends Phaser.Scene
 
         if(Phaser.Input.Keyboard.JustDown(this.PlayerController.space))
         {
-            // TODO: 공격 함수 추가
             if(!this.laserGroup)
             {
                 return
