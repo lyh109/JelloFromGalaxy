@@ -1,5 +1,3 @@
-import { Tweens } from "phaser"
-
 export default class Player extends Phaser.Physics.Matter.Image
 {
     private worldWidth!: number
