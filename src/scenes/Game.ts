@@ -33,11 +33,6 @@ export default class Game extends Phaser.Scene
     private score: number = 0
     private scoreText!: Phaser.GameObjects.Text
 
-    getPlayer()
-    {
-        return this.player
-    }
-
     private spawnLaser(x: number, y: number, texKey: string)
     {
         if(!this.laserGroup)
@@ -67,6 +62,17 @@ export default class Game extends Phaser.Scene
 
     private updateEnergy = (num: number) =>
     {
+        if(num == 0)
+        {
+            this.cameras.main.fadeOut()
+            this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+                this.time.delayedCall(1000, () => {
+                    this.scene.start(SceneKeys.GameOver, {score: this.score})
+                })
+            }) 
+            return
+        }
+
         if(num <= this.player.getMaxEnergyNum())
         {
             this.player.setEnergyNum(num)
@@ -110,8 +116,7 @@ export default class Game extends Phaser.Scene
         this.player.setShieldNum(this.player.getMaxShieldNum())
     }
 
-    // TODO: 생성할 때 아이템 객체 받아서 생성하게?
-    private tempSpawnItem = (x: number, y: number, item: Item) =>
+    private spawnItem = (x: number, y: number, item: Item) =>
     {
         item.setCollisionCategory(this.itemCat)
         item.setCollidesWith([this.playerCat, this.itemCat])
@@ -121,58 +126,40 @@ export default class Game extends Phaser.Scene
     private destroyEnemy = (num: number, x: number, y: number) =>
     {
         this.addScore(num)
-        // TODO: spawnItem 수정 후 주석 풀기
 
-        // if(Phaser.Math.Between(1, 10) <= 6)
-        // {
-        //     let item = new Item(this, x, y, TextureKeys.PILL)
-        //     item.setCollisionCategory(this.itemCat)
-        //     item.setCollidesWith([this.playerCat, this.itemCat])
-        //     this.items.push(item)
-        // }
+        let item: Item
+        if(Phaser.Math.Between(1, 10) <= 6)
+        {
+            item = new Pill(this, x, y)
+            this.spawnItem(x, y, item)
+        }
 
-        // if(Phaser.Math.Between(1, 10) <= 6)
-        // {
-        //     let item = new Item(this, x, y, TextureKeys.POWERUP)
-        //     item.setCollisionCategory(this.itemCat)
-        //     item.setCollidesWith([this.playerCat, this.itemCat])
-        //     this.items.push(item)
-        // }
-        // else
-        // {
-        //     let item = new Item(this, x, y, TextureKeys.SHIELD)
-        //     item.setCollisionCategory(this.itemCat)
-        //     item.setCollidesWith([this.playerCat, this.itemCat])
-        //     this.items.push(item)
-        // }
+        if(Phaser.Math.Between(1, 10) <= 6)
+        {
+            item = new PowerUP(this, x, y)
+            this.spawnItem(x, y, item)
+        }
+        else
+        {
+            item = new Shield(this, x, y)
+            this.spawnItem(x, y, item)
+        }
 
-        // if(Phaser.Math.Between(1, 10) <= 5)
-        // {
-        //     let item = new Item(this, x, y, TextureKeys.STAR_BRONZE)
-        //     item.setCollisionCategory(this.itemCat)
-        //     item.setCollidesWith([this.playerCat, this.itemCat])
-        //     this.items.push(item)
-        // }
-        // else if(Phaser.Math.Between(1, 10) <= 3)
-        // {
-        //     let item = new Item(this, x, y, TextureKeys.STAR_SILVER)
-        //     item.setCollisionCategory(this.itemCat)
-        //     item.setCollidesWith([this.playerCat, this.itemCat])
-        //     this.items.push(item)
-        // }
-        // else if(Phaser.Math.Between(1, 10) <= 1)
-        // {
-        //     let item = new Item(this, x, y, TextureKeys.STAR_GOLD)
-        //     item.setCollisionCategory(this.itemCat)
-        //     item.setCollidesWith([this.playerCat, this.itemCat])
-        //     this.items.push(item)
-        // }
-
-        let item = new Pill(this, x, y)
-        this.tempSpawnItem(x, y, item)
-
-        item = new Star(this, x, y, TextureKeys.STAR_GOLD)
-        this.tempSpawnItem(x, y, item)
+        if(Phaser.Math.Between(1, 10) <= 5)
+        {
+            item = new Star(this, x, y, TextureKeys.STAR_BRONZE)
+            this.spawnItem(x, y, item)
+        }
+        else if(Phaser.Math.Between(1, 10) <= 3)
+        {
+            item = new Star(this, x, y, TextureKeys.STAR_SILVER)
+            this.spawnItem(x, y, item)
+        }
+        else if(Phaser.Math.Between(1, 10) <= 1)
+        {
+            item = new Star(this, x, y, TextureKeys.STAR_GOLD)
+            this.spawnItem(x, y, item)
+        }
     }
 
     constructor()
