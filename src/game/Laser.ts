@@ -28,7 +28,7 @@ class Laser extends Phaser.Physics.Matter.Image
     }
 }
 
-export default class LaserPool extends Phaser.GameObjects.Group
+class LaserPool extends Phaser.GameObjects.Group
 {
     constructor(scene: Phaser.Scene, config: Phaser.Types.GameObjects.Group.GroupConfig = {})
     {
@@ -41,7 +41,7 @@ export default class LaserPool extends Phaser.GameObjects.Group
         this.scene = scene
     }
 
-    spawn(x: number, y: number, key: string = TextureKeys.LASER1)
+    spawn(x: number, y: number, key: string)
     {
         const spawnExisting = this.countActive(false) > 0
         
@@ -81,5 +81,73 @@ export default class LaserPool extends Phaser.GameObjects.Group
             visible: false,
             active: false
         })
+    }
+}
+
+export class Laser1Pool extends LaserPool
+{
+    constructor(scene: Phaser.Scene, config: Phaser.Types.GameObjects.Group.GroupConfig = {})
+    {
+        const defaults: Phaser.Types.GameObjects.Group.GroupConfig = {
+            classType: Laser,
+            maxSize: -1
+        }
+
+        super(scene, Object.assign(defaults, config))
+        this.scene = scene
+    }
+
+    spawn(x: number, y: number, key: string = TextureKeys.LASER1)
+    {
+        const spawnExisting = this.countActive(false) > 0
+        
+        const laser = super.get(x, y, key)
+        if(!laser)
+        {
+            return
+        }
+
+        if(spawnExisting)
+        {
+            laser.setActive(true)
+            laser.setVisible(true)
+            laser.world.add(laser.body)
+        }
+
+        return laser
+    }
+}
+
+export class Laser2Pool extends LaserPool
+{
+    constructor(scene: Phaser.Scene, config: Phaser.Types.GameObjects.Group.GroupConfig = {})
+    {
+        const defaults: Phaser.Types.GameObjects.Group.GroupConfig = {
+            classType: Laser,
+            maxSize: -1
+        }
+
+        super(scene, Object.assign(defaults, config))
+        this.scene = scene
+    }
+
+    spawn(x: number, y: number, key: string = TextureKeys.LASER2)
+    {
+        const spawnExisting = this.countActive(false) > 0
+        
+        const laser = super.get(x, y, key)
+        if(!laser)
+        {
+            return
+        }
+
+        if(spawnExisting)
+        {
+            laser.setActive(true)
+            laser.setVisible(true)
+            laser.world.add(laser.body)
+        }
+
+        return laser
     }
 }
