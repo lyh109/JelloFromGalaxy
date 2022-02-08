@@ -1,12 +1,13 @@
 import SceneKeys from "~/consts/SceneKeys"
 import TextureKeys from "~/consts/TextureKeys"
+import EventKeys from "~/consts/EventKeys"
 
 import Player from "~/game/Player"
 import LaserPool from "~/game/Laser"
 
 import Enemy from "~/game/Enemy"
 
-import Item from "~/game/Item"
+import { Item, Pill, PowerUP, Shield, Star } from "~/game/Item"
 
 export default class Game extends Phaser.Scene
 {
@@ -27,6 +28,11 @@ export default class Game extends Phaser.Scene
 
     private score: number = 0
     private scoreText!: Phaser.GameObjects.Text
+
+    getPlayer()
+    {
+        return this.player
+    }
 
     private spawnLaser(x: number, y: number, texKey: string)
     {
@@ -70,35 +76,9 @@ export default class Game extends Phaser.Scene
         }
     }
 
-    private getItem(name: string)
+    private addEnergy = () =>
     {
-        switch(name)
-        {
-            case TextureKeys.PILL: {
-                this.updateEnergy(this.player.getEnergyNum() + 1)
-                break
-            }
-            case TextureKeys.POWERUP: {
-                // TODO: PowerUP 아이템 효과 구현
-                break
-            }
-            case TextureKeys.SHIELD: {
-                // TODO: Shield 아이템 효과 구현
-                break
-            }
-            case TextureKeys.STAR_BRONZE: {
-                this.addScore(10)
-                break
-            }
-            case TextureKeys.STAR_SILVER: {
-                this.addScore(30)
-                break
-            }
-            case TextureKeys.STAR_GOLD: {
-                this.addScore(50)
-                break
-            }
-        }
+        this.updateEnergy(this.player.getEnergyNum() + 1)
     }
 
     private addScore = (num: number) =>
@@ -107,13 +87,24 @@ export default class Game extends Phaser.Scene
         this.scoreText.setText('SCORE: ' + this.score)
     }
 
+    private getPowerUp = () =>
+    {
+        // TODO: 효과 구현
+    }
+
+    private getShield = () =>
+    {
+        // TODO: 효과 구현
+    }
+
+    // TODO: 생성할 때 아이템 객체 받아서 생성하게?
     private spawnItem = (x: number, y: number) =>
     {
         if(Phaser.Math.Between(1, 10) <= 6)
         {
             let item = new Item(this, x, y, TextureKeys.PILL)
             item.setCollisionCategory(this.itemCat)
-            item.setCollidesWith(this.playerCat)
+            item.setCollidesWith([this.playerCat, this.itemCat])
             this.items.push(item)
         }
 
@@ -121,13 +112,14 @@ export default class Game extends Phaser.Scene
         {
             let item = new Item(this, x, y, TextureKeys.POWERUP)
             item.setCollisionCategory(this.itemCat)
+            item.setCollidesWith([this.playerCat, this.itemCat])
             this.items.push(item)
         }
-
-        if(Phaser.Math.Between(1, 10) <= 3)
+        else
         {
             let item = new Item(this, x, y, TextureKeys.SHIELD)
             item.setCollisionCategory(this.itemCat)
+            item.setCollidesWith([this.playerCat, this.itemCat])
             this.items.push(item)
         }
 
@@ -135,20 +127,21 @@ export default class Game extends Phaser.Scene
         {
             let item = new Item(this, x, y, TextureKeys.STAR_BRONZE)
             item.setCollisionCategory(this.itemCat)
+            item.setCollidesWith([this.playerCat, this.itemCat])
             this.items.push(item)
         }
-        
-        if(Phaser.Math.Between(1, 10) <= 3)
+        else if(Phaser.Math.Between(1, 10) <= 3)
         {
             let item = new Item(this, x, y, TextureKeys.STAR_SILVER)
             item.setCollisionCategory(this.itemCat)
+            item.setCollidesWith([this.playerCat, this.itemCat])
             this.items.push(item)
         }
-
-        if(Phaser.Math.Between(1, 10) <= 1)
+        else if(Phaser.Math.Between(1, 10) <= 1)
         {
             let item = new Item(this, x, y, TextureKeys.STAR_GOLD)
             item.setCollisionCategory(this.itemCat)
+            item.setCollidesWith([this.playerCat, this.itemCat])
             this.items.push(item)
         }
     }
@@ -156,7 +149,8 @@ export default class Game extends Phaser.Scene
     private destroyEnemy = (num: number, x: number, y: number) =>
     {
         this.addScore(num)
-        this.spawnItem(x, y)
+        // TODO: spawnItem 수정 후 주석 풀기
+        // this.spawnItem(x, y)
     }
 
     constructor()
@@ -189,11 +183,15 @@ export default class Game extends Phaser.Scene
 
         // PAUSE
         this.input.keyboard.on('keydown-ESC', () => {
-            this.events.emit('pause')
+            this.events.emit(EventKeys.PAUSE)
         })
 
-        // IncreaseScore
-        this.events.on('DestroyEnemy', this.destroyEnemy)
+        // Events
+        this.events.on(EventKeys.ADD_ENERGY, this.addEnergy)
+        this.events.on(EventKeys.ADD_SCORE, this.addScore)
+        this.events.on(EventKeys.GET_POWERUP, this.getPowerUp)
+        this.events.on(EventKeys.GET_SHIELD, this.getShield)
+        this.events.on(EventKeys.DESTROY_ENEMY, this.destroyEnemy)
 
         this.playerCat = this.matter.world.nextCategory()
         this.enemyCat = this.matter.world.nextCategory()
@@ -244,8 +242,8 @@ export default class Game extends Phaser.Scene
             else if(event.pairs[0].bodyA.gameObject.texture.key[0] == 'P'
                     && event.pairs[0].bodyB.gameObject.texture.key[0] == 'I')
             {
+                event.pairs[0].bodyB.getItem()
                 event.pairs[0].bodyB.gameObject.despawn()
-                this.getItem(event.pairs[0].bodyB.gameObject.name)
             }
         })
 
