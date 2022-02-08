@@ -1,4 +1,5 @@
 import SceneKeys from "~/consts/SceneKeys";
+import SoundKeys from "~/consts/SoundKeys";
 import TextureKeys from "~/consts/TextureKeys";
 
 export default class Preloader extends Phaser.Scene
@@ -51,6 +52,9 @@ export default class Preloader extends Phaser.Scene
         this.load.image(TextureKeys.STAR_GOLD, 'items/star_gold.png')
 
         this.load.json('object', 'map/objects0.json')
+
+        this.load.audio(SoundKeys.S_ON, 'sound/on.mp3')
+        this.load.audio(SoundKeys.S_OFF, 'sound/off.mp3')
     }
 
     create()
