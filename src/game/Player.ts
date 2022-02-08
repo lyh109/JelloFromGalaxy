@@ -9,7 +9,7 @@ export default class Player extends Phaser.Physics.Matter.Image
     private energyNum: number = this.maxEnergyNum
 
     private maxPowerupNum: number = 5
-    private powerupNum: number = 0
+    private powerupNum: number = 5
 
     private maxShieldNum: number = 3
     private shieldNum: number = 0
@@ -38,6 +38,16 @@ export default class Player extends Phaser.Physics.Matter.Image
             yoyo: true,
             repeat: -1
         }).pause()
+    }
+
+    reset()
+    {
+        this.energyNum = this.maxEnergyNum
+        this.powerupNum = 0
+        this.shieldNum = 0
+        
+        this.shieldEffect.setVisible(false)
+        this.shieldEffectTween.pause()
     }
 
     getMaxEnergyNum()
@@ -132,16 +142,17 @@ export default class Player extends Phaser.Physics.Matter.Image
     Idle()
     {
         this.y = this.initY
+        this.shieldEffect.setPosition(this.x, this.y + 15)
 
         if(this.rotation > 0)
         {
             this.rotation -= 0.01
-            this.shieldEffect.rotation -= 0.01
         }
         else if(this.rotation < 0)
         {
             this.rotation += 0.01
-            this.shieldEffect.rotation += 0.01
         }
+
+        this.shieldEffect.rotation = this.rotation
     }
 }
