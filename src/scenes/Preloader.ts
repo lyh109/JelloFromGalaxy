@@ -51,6 +51,8 @@ export default class Preloader extends Phaser.Scene
         this.load.image(TextureKeys.STAR_SILVER, 'items/star_silver.png')
         this.load.image(TextureKeys.STAR_GOLD, 'items/star_gold.png')
 
+        this.load.image(TextureKeys.SHIELD_EFFECT, 'effect/shield.png')
+
         this.load.json('object', 'map/objects0.json')
 
         this.load.audio(SoundKeys.S_ON, 'sound/on.mp3')

@@ -37,7 +37,9 @@ enum TextureKeys
 
     STAR_BRONZE = 'I_star-bronze',
     STAR_SILVER = 'I_star-silver',
-    STAR_GOLD = 'I_star-gold'
+    STAR_GOLD = 'I_star-gold',
+
+    SHIELD_EFFECT = 'shield-effect'
 }
 
 export default TextureKeys

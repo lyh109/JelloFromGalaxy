@@ -1,3 +1,5 @@
+import TextureKeys from "~/consts/TextureKeys"
+
 export default class Player extends Phaser.Physics.Matter.Image
 {
     private worldWidth!: number
@@ -9,8 +11,11 @@ export default class Player extends Phaser.Physics.Matter.Image
     private maxPowerupNum: number = 5
     private powerupNum: number = 0
 
-    private maxShieldNum: number = 5
+    private maxShieldNum: number = 3
     private shieldNum: number = 0
+
+    private shieldEffect: Phaser.GameObjects.Image
+    private shieldEffectTween: any
     
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame: string)
     {
@@ -22,6 +27,17 @@ export default class Player extends Phaser.Physics.Matter.Image
         this.initY = y
 
         this.setIgnoreGravity(true)
+
+        this.shieldEffect = this.scene.add.image(x, y + 15, TextureKeys.SHIELD_EFFECT)
+        this.shieldEffect.setVisible(false)
+
+        this.shieldEffectTween = this.scene.tweens.add({
+            targets: this.shieldEffect,
+            alpha: 0.3,
+            duration: 1500,
+            yoyo: true,
+            repeat: -1
+        }).pause()
     }
 
     getMaxEnergyNum()
@@ -54,6 +70,11 @@ export default class Player extends Phaser.Physics.Matter.Image
         this.powerupNum = num
     }
 
+    getMaxShieldNum()
+    {
+        return this.maxShieldNum
+    }
+
     getShieldNum()
     {
         return this.shieldNum
@@ -62,6 +83,20 @@ export default class Player extends Phaser.Physics.Matter.Image
     setShieldNum(num: number)
     {
         this.shieldNum = num
+        
+        if(this.shieldNum == this.maxShieldNum)
+        {
+            this.shieldEffect.setVisible(true)
+            if(this.shieldEffectTween.isPaused())
+            {
+                this.shieldEffectTween.play()
+            }
+        }
+        else if(this.shieldNum == 0)
+        {
+            this.shieldEffect.setVisible(false)
+            this.shieldEffectTween.pause()
+        }
     }
 
     MoveLeft()
@@ -69,11 +104,13 @@ export default class Player extends Phaser.Physics.Matter.Image
         if(this.rotation > -0.1)
         {
             this.rotation -= 0.01
+            this.shieldEffect.rotation -= 0.01
         }
 
         if(this.x > this.width / 2)
         {
             this.x -= 5
+            this.shieldEffect.x -= 5
         }
     }
 
@@ -82,11 +119,13 @@ export default class Player extends Phaser.Physics.Matter.Image
         if(this.rotation < 0.1)
         {
             this.rotation += 0.01
+            this.shieldEffect.rotation += 0.01
         }
 
         if(this.x < this.worldWidth - this.width / 2)
         {
             this.x += 5
+            this.shieldEffect.x += 5
         }
     }
 
@@ -97,10 +136,12 @@ export default class Player extends Phaser.Physics.Matter.Image
         if(this.rotation > 0)
         {
             this.rotation -= 0.01
+            this.shieldEffect.rotation -= 0.01
         }
         else if(this.rotation < 0)
         {
             this.rotation += 0.01
+            this.shieldEffect.rotation += 0.01
         }
     }
 }
