@@ -3,7 +3,7 @@ import TextureKeys from "~/consts/TextureKeys"
 import EventKeys from "~/consts/EventKeys"
 
 import Player from "~/game/Player"
-import LaserPool from "~/game/Laser"
+import { Laser1Pool, Laser2Pool } from "~/game/Laser"
 
 import Enemy from "~/game/Enemy"
 
@@ -20,7 +20,8 @@ export default class Game extends Phaser.Scene
     private PlayerController!: Phaser.Types.Input.Keyboard.CursorKeys
     private playerEnergy: Phaser.GameObjects.Image[] = []
 
-    private laserGroup?: LaserPool
+    private laser1Group?: Laser1Pool
+    private laser2Group?: Laser2Pool
     private laser1Sound!: Phaser.Sound.BaseSound
     private laser2Sound!: Phaser.Sound.BaseSound
 
@@ -45,33 +46,52 @@ export default class Game extends Phaser.Scene
             i.despawn()
         }
 
-        this.player.setEnergyNum(this.player.getMaxEnergyNum())
+        this.player.reset()
         this.playerEnergy = []
     }
 
     private spawnLaser(x: number, y: number, texKey: string)
     {
-        if(!this.laserGroup)
+        if(!this.laser1Group || !this.laser2Group)
         {
             return
         }
 
-        const laser = this.laserGroup.spawn(x, y, texKey)
-        laser.setCollidesWith(this.enemyCat)
+        let laser: any
 
-        laser.laserTween = this.tweens.add({
-            targets: laser,
-            y: this.scale.height + 10,
-            onComplete: () => {
-                this.tweens.killTweensOf(laser)
-                this.laserGroup?.despawn(laser)
-            }
-        })
+        if(texKey == TextureKeys.LASER1)
+        {
+            laser = this.laser1Group.spawn(x, y, texKey)
+            laser.setCollidesWith(this.enemyCat)
 
+            laser.laserTween = this.tweens.add({
+                targets: laser,
+                y: this.scale.height + 10,
+                onComplete: () => {
+                    this.tweens.killTweensOf(laser)
+                    this.laser1Group?.despawn(laser)
+                }
+            })
+        }
+        else
+        {
+            laser = this.laser2Group.spawn(x, y, texKey)
+            laser.setCollidesWith(this.enemyCat)
+
+            laser.laserTween = this.tweens.add({
+                targets: laser,
+                y: this.scale.height + 10,
+                onComplete: () => {
+                    this.tweens.killTweensOf(laser)
+                    this.laser2Group?.despawn(laser)
+                }
+            })
+        }
+        
         if(!laser)
-        {
-            return
-        }
+            {
+                return
+            }
 
         return laser
     }
@@ -101,6 +121,7 @@ export default class Game extends Phaser.Scene
 
         if(num == 0)
         {
+            this.cameras.main.shake()
             this.cameras.main.fadeOut()
             this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
                 this.time.delayedCall(1000, () => {
@@ -204,7 +225,8 @@ export default class Game extends Phaser.Scene
         this.player = new Player(this, width / 2, 150, TextureKeys.SPACESHIP, this.selectedCharacter)
         this.PlayerController = this.input.keyboard.createCursorKeys()
 
-        this.laserGroup = new LaserPool(this)
+        this.laser1Group = new Laser1Pool(this)
+        this.laser2Group = new Laser2Pool(this)
         this.laser1Sound = this.sound.add(SoundKeys.S_LASER1, {volume: 0.1})
         this.laser2Sound = this.sound.add(SoundKeys.S_LASER2, {volume: 0.1}) 
 
@@ -272,7 +294,10 @@ export default class Game extends Phaser.Scene
             {
                 event.pairs[0].bodyA.gameObject.updateHP(event.pairs[0].bodyB.gameObject.getDamage())
                 event.pairs[0].bodyB.gameObject.laserTween.stop()
-                this.laserGroup?.despawn(event.pairs[0].bodyB.gameObject)
+                if(event.pairs[0].bodyB.gameObject.texture.key == TextureKeys.LASER1)
+                    this.laser1Group?.despawn(event.pairs[0].bodyB.gameObject)
+                else
+                    this.laser2Group?.despawn(event.pairs[0].bodyB.gameObject)
             }
             else if(event.pairs[0].bodyA.gameObject.texture.key[0] == 'P'
                     && event.pairs[0].bodyB.gameObject.texture.key[0] == 'I')
@@ -313,7 +338,7 @@ export default class Game extends Phaser.Scene
 
             if(Phaser.Input.Keyboard.JustDown(this.PlayerController.space))
             {
-                if(!this.laserGroup)
+                if(!this.laser1Group || !this.laser2Group)
                 {
                     return
                 }
@@ -321,6 +346,7 @@ export default class Game extends Phaser.Scene
                 if(this.player.getPowerupNum() > 0)
                 {
                     this.laser2Sound.play()
+                    this.player.setPowerupNum(this.player.getPowerupNum() - 1)
                     this.spawnLaser(this.player.x, this.player.y + this.player.height / 2 + 10, TextureKeys.LASER2)
                 }
                 else
