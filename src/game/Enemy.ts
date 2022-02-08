@@ -58,14 +58,14 @@ export default class Enemy extends Phaser.Physics.Matter.Image
         this.isCollided = true
     }
 
-    updateHP()
+    updateHP(damage: number)
     {
         // 4 3 2 1 0
         // 8 6 4 2 0
         // 12 9 6 3 0
         // 16 12 8 4 0
 
-        --this.hp
+        this.hp -= damage
 
         if(this.hp == 0)
         {

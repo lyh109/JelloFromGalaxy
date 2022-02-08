@@ -6,7 +6,10 @@ export default class Player extends Phaser.Physics.Matter.Image
     private maxEnergyNum: number = 5
     private energyNum: number = this.maxEnergyNum
 
+    private maxPowerupNum: number = 5
     private powerupNum: number = 0
+
+    private maxShieldNum: number = 5
     private shieldNum: number = 0
     
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string, frame: string)
@@ -34,6 +37,11 @@ export default class Player extends Phaser.Physics.Matter.Image
     setEnergyNum(num: number)
     {
         this.energyNum = num
+    }
+
+    getMaxPowerupNum()
+    {
+        return this.maxPowerupNum
     }
 
     getPowerupNum()

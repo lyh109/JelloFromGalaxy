@@ -94,7 +94,7 @@ export default class Game extends Phaser.Scene
     private getPowerUp = () =>
     {
         // TODO: 효과 구현
-        // this.player.setPowerupNum()
+        this.player.setPowerupNum(this.player.getMaxPowerupNum())
     }
 
     private getShield = () =>
@@ -243,7 +243,7 @@ export default class Game extends Phaser.Scene
             else if(event.pairs[0].bodyA.gameObject.texture.key[0] == 'S'
                     && event.pairs[0].bodyB.gameObject.texture.key[0] == 'L')
             {
-                event.pairs[0].bodyA.gameObject.updateHP()
+                event.pairs[0].bodyA.gameObject.updateHP(event.pairs[0].bodyB.gameObject.getDamage())
                 this.laserGroup?.despawn(event.pairs[0].bodyB.gameObject)
             }
             else if(event.pairs[0].bodyA.gameObject.texture.key[0] == 'P'

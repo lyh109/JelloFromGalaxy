@@ -2,12 +2,28 @@ import TextureKeys from "~/consts/TextureKeys"
 
 class Laser extends Phaser.Physics.Matter.Image
 {
+    private damage: number
+
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string)
     {
         super(scene.matter.world, x, y, texture)
 
         scene.add.existing(this)
         this.scene = scene
+
+        if(texture == TextureKeys.LASER1)
+        {
+            this.damage = 1
+        }
+        else
+        {
+            this.damage = 2
+        }
+    }
+
+    getDamage()
+    {
+        return this.damage
     }
 }
 
