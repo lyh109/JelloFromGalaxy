@@ -13,6 +13,8 @@ export default class Title extends Phaser.Scene
 
     create()
     {
+        this.cameras.main.fadeIn()
+
         const width = this.scale.width
         const height = this.scale.height
 

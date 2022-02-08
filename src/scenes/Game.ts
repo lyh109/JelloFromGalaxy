@@ -21,8 +21,8 @@ export default class Game extends Phaser.Scene
     private playerEnergy: Phaser.GameObjects.Image[] = []
 
     private laserGroup?: LaserPool
-    private laser1Sound: any
-    private laser2Sound: any
+    private laser1Sound!: Phaser.Sound.BaseSound
+    private laser2Sound!: Phaser.Sound.BaseSound
 
     private enemies: Enemy[] = []
     private enemyCat: any
@@ -32,6 +32,22 @@ export default class Game extends Phaser.Scene
 
     private score: number = 0
     private scoreText!: Phaser.GameObjects.Text
+
+    private resetGame()
+    {
+        for(const e of this.enemies)
+        {
+            e.despawn()
+        }
+
+        for(const i of this.items)
+        {
+            i.despawn()
+        }
+
+        this.player.setEnergyNum(this.player.getMaxEnergyNum())
+        this.playerEnergy = []
+    }
 
     private spawnLaser(x: number, y: number, texKey: string)
     {
@@ -62,17 +78,6 @@ export default class Game extends Phaser.Scene
 
     private updateEnergy = (num: number) =>
     {
-        if(num == 0)
-        {
-            this.cameras.main.fadeOut()
-            this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
-                this.time.delayedCall(1000, () => {
-                    this.scene.start(SceneKeys.GameOver, {score: this.score})
-                })
-            }) 
-            return
-        }
-
         if(num <= this.player.getMaxEnergyNum())
         {
             this.player.setEnergyNum(num)
@@ -92,6 +97,17 @@ export default class Game extends Phaser.Scene
             {
                 this.playerEnergy[i].setTexture(TextureKeys.ENERGY_BLANK)
             }
+        }
+
+        if(num == 0)
+        {
+            this.cameras.main.fadeOut()
+            this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
+                this.time.delayedCall(1000, () => {
+                    this.resetGame()
+                    this.scene.start(SceneKeys.GameOver, {score: this.score})
+                })
+            }) 
         }
     }
 
@@ -280,37 +296,39 @@ export default class Game extends Phaser.Scene
     {
         this.background.tilePositionY += 1
 
-        if(this.PlayerController.left.isDown)
+        if(this.player.getEnergyNum() > 0)
         {
-            this.player.MoveLeft()
-        }
-        else if(this.PlayerController.right.isDown)
-        {
-            this.player.MoveRight()
-        }
-        else
-        {
-            this.player.Idle()
-        }
-
-        if(Phaser.Input.Keyboard.JustDown(this.PlayerController.space))
-        {
-            if(!this.laserGroup)
+            if(this.PlayerController.left.isDown)
             {
-                return
+                this.player.MoveLeft()
             }
-
-            if(this.player.getPowerupNum() > 0)
+            else if(this.PlayerController.right.isDown)
             {
-                this.laser2Sound.play()
-                this.spawnLaser(this.player.x, this.player.y + this.player.height / 2 + 10, TextureKeys.LASER2)
+                this.player.MoveRight()
             }
             else
             {
-                this.laser1Sound.play()
-                this.spawnLaser(this.player.x, this.player.y + this.player.height / 2 + 10, TextureKeys.LASER1)
+                this.player.Idle()
             }
-            
+
+            if(Phaser.Input.Keyboard.JustDown(this.PlayerController.space))
+            {
+                if(!this.laserGroup)
+                {
+                    return
+                }
+
+                if(this.player.getPowerupNum() > 0)
+                {
+                    this.laser2Sound.play()
+                    this.spawnLaser(this.player.x, this.player.y + this.player.height / 2 + 10, TextureKeys.LASER2)
+                }
+                else
+                {
+                    this.laser1Sound.play()
+                    this.spawnLaser(this.player.x, this.player.y + this.player.height / 2 + 10, TextureKeys.LASER1)
+                }
+            }
         }
 
         for(const e of this.enemies)
