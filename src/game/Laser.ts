@@ -41,7 +41,7 @@ export default class LaserPool extends Phaser.GameObjects.Group
         this.scene = scene
     }
 
-    spawn(x, y, key: string = TextureKeys.LASER1)
+    spawn(x: number, y: number, key: string = TextureKeys.LASER1)
     {
         const spawnExisting = this.countActive(false) > 0
         

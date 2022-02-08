@@ -9,7 +9,6 @@ export class Item extends Phaser.Physics.Matter.Image
     private ySpeed: number = Phaser.Math.Between(2, 4)
 
     GameScene = this.scene.scene.get(SceneKeys.Game)
-    count = 0
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string = TextureKeys.PILL)
     {
@@ -48,7 +47,7 @@ export class Item extends Phaser.Physics.Matter.Image
 
     getItem()
     {
-        console.log(++this.count)
+        return
     }
 }
 
