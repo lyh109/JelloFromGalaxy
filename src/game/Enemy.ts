@@ -1,3 +1,4 @@
+import EventKeys from "~/consts/EventKeys"
 import TextureKeys from "~/consts/TextureKeys"
 
 const SHIP_BLUE_TEXTURE: string[] = [TextureKeys.SHIP_BLUE1, TextureKeys.SHIP_BLUE2, TextureKeys.SHIP_BLUE3, TextureKeys.SHIP_BLUE4]
@@ -68,7 +69,7 @@ export default class Enemy extends Phaser.Physics.Matter.Image
 
         if(this.hp == 0)
         {
-            this.scene.events.emit('DestroyEnemy', 10 * this.maxHP, this.x, this.y)
+            this.scene.events.emit(EventKeys.DESTROY_ENEMY, 10 * this.maxHP, this.x, this.y)
             this.despawn()
             return
         }
