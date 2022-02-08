@@ -47,11 +47,14 @@ export default class Pause extends Phaser.Scene
         })
 
         this.input.keyboard.on('keydown-R', () =>{
-            PauseBG.setVisible(false)
-            PauseText.setVisible(false)
-            pressRText.setVisible(false)
+            if(GameScene.scene.isPaused())
+            {
+                PauseBG.setVisible(false)
+                PauseText.setVisible(false)
+                pressRText.setVisible(false)
 
-            this.scene.resume(GameScene)
+                this.scene.resume(GameScene)
+            }
         })
     }
 }
