@@ -8,6 +8,7 @@ import LaserPool from "~/game/Laser"
 import Enemy from "~/game/Enemy"
 
 import { Item, Pill, PowerUP, Shield, Star } from "~/game/Item"
+import SoundKeys from "~/consts/SoundKeys"
 
 export default class Game extends Phaser.Scene
 {
@@ -15,10 +16,13 @@ export default class Game extends Phaser.Scene
     private selectedCharacter!: string
 
     private player!: Player
+    private playerCat: any
     private PlayerController!: Phaser.Types.Input.Keyboard.CursorKeys
     private playerEnergy: Phaser.GameObjects.Image[] = []
+
     private laserGroup?: LaserPool
-    private playerCat: any
+    private laser1Sound: any
+    private laser2Sound: any
 
     private enemies: Enemy[] = []
     private enemyCat: any
@@ -90,6 +94,7 @@ export default class Game extends Phaser.Scene
     private getPowerUp = () =>
     {
         // TODO: 효과 구현
+        // this.player.setPowerupNum()
     }
 
     private getShield = () =>
@@ -180,6 +185,8 @@ export default class Game extends Phaser.Scene
         this.PlayerController = this.input.keyboard.createCursorKeys()
 
         this.laserGroup = new LaserPool(this)
+        this.laser1Sound = this.sound.add(SoundKeys.S_LASER1, {volume: 0.1})
+        this.laser2Sound = this.sound.add(SoundKeys.S_LASER2, {volume: 0.1}) 
 
         // PAUSE
         this.input.keyboard.on('keydown-ESC', () => {
@@ -281,7 +288,17 @@ export default class Game extends Phaser.Scene
                 return
             }
 
-            this.spawnLaser(this.player.x, this.player.y + this.player.height / 2 + 10, TextureKeys.LASER1)
+            if(this.player.getPowerupNum() > 0)
+            {
+                this.laser2Sound.play()
+                this.spawnLaser(this.player.x, this.player.y + this.player.height / 2 + 10, TextureKeys.LASER2)
+            }
+            else
+            {
+                this.laser1Sound.play()
+                this.spawnLaser(this.player.x, this.player.y + this.player.height / 2 + 10, TextureKeys.LASER1)
+            }
+            
         }
 
         for(const e of this.enemies)
