@@ -48,6 +48,15 @@ export default class Game extends Phaser.Scene
         const laser = this.laserGroup.spawn(x, y, texKey)
         laser.setCollidesWith(this.enemyCat)
 
+        laser.laserTween = this.tweens.add({
+            targets: laser,
+            y: this.scale.height + 10,
+            onComplete: () => {
+                this.tweens.killTweensOf(laser)
+                this.laserGroup?.despawn(laser)
+            }
+        })
+
         if(!laser)
         {
             return
@@ -93,69 +102,77 @@ export default class Game extends Phaser.Scene
 
     private getPowerUp = () =>
     {
-        // TODO: 효과 구현
         this.player.setPowerupNum(this.player.getMaxPowerupNum())
     }
 
     private getShield = () =>
     {
-        // TODO: 효과 구현
+        this.player.setShieldNum(this.player.getMaxShieldNum())
     }
 
     // TODO: 생성할 때 아이템 객체 받아서 생성하게?
-    private spawnItem = (x: number, y: number) =>
+    private tempSpawnItem = (x: number, y: number, item: Item) =>
     {
-        if(Phaser.Math.Between(1, 10) <= 6)
-        {
-            let item = new Item(this, x, y, TextureKeys.PILL)
-            item.setCollisionCategory(this.itemCat)
-            item.setCollidesWith([this.playerCat, this.itemCat])
-            this.items.push(item)
-        }
-
-        if(Phaser.Math.Between(1, 10) <= 6)
-        {
-            let item = new Item(this, x, y, TextureKeys.POWERUP)
-            item.setCollisionCategory(this.itemCat)
-            item.setCollidesWith([this.playerCat, this.itemCat])
-            this.items.push(item)
-        }
-        else
-        {
-            let item = new Item(this, x, y, TextureKeys.SHIELD)
-            item.setCollisionCategory(this.itemCat)
-            item.setCollidesWith([this.playerCat, this.itemCat])
-            this.items.push(item)
-        }
-
-        if(Phaser.Math.Between(1, 10) <= 5)
-        {
-            let item = new Item(this, x, y, TextureKeys.STAR_BRONZE)
-            item.setCollisionCategory(this.itemCat)
-            item.setCollidesWith([this.playerCat, this.itemCat])
-            this.items.push(item)
-        }
-        else if(Phaser.Math.Between(1, 10) <= 3)
-        {
-            let item = new Item(this, x, y, TextureKeys.STAR_SILVER)
-            item.setCollisionCategory(this.itemCat)
-            item.setCollidesWith([this.playerCat, this.itemCat])
-            this.items.push(item)
-        }
-        else if(Phaser.Math.Between(1, 10) <= 1)
-        {
-            let item = new Item(this, x, y, TextureKeys.STAR_GOLD)
-            item.setCollisionCategory(this.itemCat)
-            item.setCollidesWith([this.playerCat, this.itemCat])
-            this.items.push(item)
-        }
+        item.setCollisionCategory(this.itemCat)
+        item.setCollidesWith([this.playerCat, this.itemCat])
+        this.items.push(item)
     }
 
     private destroyEnemy = (num: number, x: number, y: number) =>
     {
         this.addScore(num)
         // TODO: spawnItem 수정 후 주석 풀기
-        // this.spawnItem(x, y)
+
+        // if(Phaser.Math.Between(1, 10) <= 6)
+        // {
+        //     let item = new Item(this, x, y, TextureKeys.PILL)
+        //     item.setCollisionCategory(this.itemCat)
+        //     item.setCollidesWith([this.playerCat, this.itemCat])
+        //     this.items.push(item)
+        // }
+
+        // if(Phaser.Math.Between(1, 10) <= 6)
+        // {
+        //     let item = new Item(this, x, y, TextureKeys.POWERUP)
+        //     item.setCollisionCategory(this.itemCat)
+        //     item.setCollidesWith([this.playerCat, this.itemCat])
+        //     this.items.push(item)
+        // }
+        // else
+        // {
+        //     let item = new Item(this, x, y, TextureKeys.SHIELD)
+        //     item.setCollisionCategory(this.itemCat)
+        //     item.setCollidesWith([this.playerCat, this.itemCat])
+        //     this.items.push(item)
+        // }
+
+        // if(Phaser.Math.Between(1, 10) <= 5)
+        // {
+        //     let item = new Item(this, x, y, TextureKeys.STAR_BRONZE)
+        //     item.setCollisionCategory(this.itemCat)
+        //     item.setCollidesWith([this.playerCat, this.itemCat])
+        //     this.items.push(item)
+        // }
+        // else if(Phaser.Math.Between(1, 10) <= 3)
+        // {
+        //     let item = new Item(this, x, y, TextureKeys.STAR_SILVER)
+        //     item.setCollisionCategory(this.itemCat)
+        //     item.setCollidesWith([this.playerCat, this.itemCat])
+        //     this.items.push(item)
+        // }
+        // else if(Phaser.Math.Between(1, 10) <= 1)
+        // {
+        //     let item = new Item(this, x, y, TextureKeys.STAR_GOLD)
+        //     item.setCollisionCategory(this.itemCat)
+        //     item.setCollidesWith([this.playerCat, this.itemCat])
+        //     this.items.push(item)
+        // }
+
+        let item = new Pill(this, x, y)
+        this.tempSpawnItem(x, y, item)
+
+        item = new Star(this, x, y, TextureKeys.STAR_GOLD)
+        this.tempSpawnItem(x, y, item)
     }
 
     constructor()
@@ -238,18 +255,26 @@ export default class Game extends Phaser.Scene
                 &&event.pairs[0].bodyB.gameObject.texture.key[0] == 'S')
             {
                 event.pairs[0].bodyB.gameObject.despawn()
-                this.updateEnergy(this.player.getEnergyNum() - 1)
+                if(this.player.getShieldNum() > 0)
+                {
+                    this.player.setShieldNum(this.player.getShieldNum() - 1)
+                }
+                else
+                {
+                    this.updateEnergy(this.player.getEnergyNum() - 1)
+                }
             }
             else if(event.pairs[0].bodyA.gameObject.texture.key[0] == 'S'
                     && event.pairs[0].bodyB.gameObject.texture.key[0] == 'L')
             {
                 event.pairs[0].bodyA.gameObject.updateHP(event.pairs[0].bodyB.gameObject.getDamage())
+                event.pairs[0].bodyB.gameObject.laserTween.stop()
                 this.laserGroup?.despawn(event.pairs[0].bodyB.gameObject)
             }
             else if(event.pairs[0].bodyA.gameObject.texture.key[0] == 'P'
                     && event.pairs[0].bodyB.gameObject.texture.key[0] == 'I')
             {
-                event.pairs[0].bodyB.getItem()
+                event.pairs[0].bodyB.gameObject.getItem()
                 event.pairs[0].bodyB.gameObject.despawn()
             }
         })

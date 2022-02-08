@@ -46,6 +46,11 @@ export default class Enemy extends Phaser.Physics.Matter.Image
     update()
     {
         this.y -= 1
+
+        if(this.y < -this.height)
+        {
+            this.despawn()
+        }
     }
 
     IsCollided()

@@ -3,6 +3,7 @@ import TextureKeys from "~/consts/TextureKeys"
 class Laser extends Phaser.Physics.Matter.Image
 {
     private damage: number
+    laserTween: any
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string)
     {
@@ -37,6 +38,7 @@ export default class LaserPool extends Phaser.GameObjects.Group
         }
 
         super(scene, Object.assign(defaults, config))
+        this.scene = scene
     }
 
     spawn(x, y, key: string = TextureKeys.LASER1)

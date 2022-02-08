@@ -5,7 +5,7 @@ import TextureKeys from "~/consts/TextureKeys"
 export class Item extends Phaser.Physics.Matter.Image
 {
     private isCollided: boolean = false
-    private xSpeed: number = Phaser.Math.Between(-1, 1)
+    private xSpeed: number = Phaser.Math.Between(-2, 2)
     private ySpeed: number = Phaser.Math.Between(2, 4)
 
     GameScene = this.scene.scene.get(SceneKeys.Game)
@@ -21,13 +21,19 @@ export class Item extends Phaser.Physics.Matter.Image
 
         this.setIgnoreGravity(true)
         this.setStatic(true)
-        this.setBounce(0.5)
+        this.setBounce(1)
     }
 
     update()
     {
         this.x -= this.xSpeed
         this.y -= this.ySpeed
+
+        if(this.x < -10 || this.x > this.scene.scale.width + 10
+            || this.y < -10 || this.y > this.scene.scale.height + 10)
+        {
+            this.despawn()
+        }
     }
 
     IsCollided()
@@ -53,7 +59,7 @@ export class Pill extends Item
         super(scene, x, y, texture)
     }
 
-    getItem(): void 
+    getItem()
     {
         this.GameScene.events.emit(EventKeys.ADD_ENERGY)
     }
@@ -66,7 +72,7 @@ export class PowerUP extends Item
         super(scene, x, y, texture)
     }
 
-    getItem(): void 
+    getItem()
     {
         this.GameScene.events.emit(EventKeys.GET_POWERUP)
     }
@@ -79,7 +85,7 @@ export class Shield extends Item
         super(scene, x, y, texture)
     }
 
-    getItem(): void 
+    getItem()
     {
         this.GameScene.events.emit(EventKeys.GET_SHIELD)
     }
@@ -103,7 +109,7 @@ export class Star extends Item
         }
     }
 
-    getItem(): void 
+    getItem()
     {
         this.GameScene.events.emit(EventKeys.ADD_SCORE, this.myScore)
     }
