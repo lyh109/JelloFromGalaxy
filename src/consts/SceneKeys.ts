@@ -4,7 +4,8 @@ enum SceneKeys
     Title = 'title',
     CharacterSelect = 'character-select',
     Game = 'game',
-    Pause = 'pause'
+    Pause = 'pause',
+    GameOver = 'game-over'
 }
 
 export default SceneKeys
