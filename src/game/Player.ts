@@ -9,7 +9,7 @@ export default class Player extends Phaser.Physics.Matter.Image
     private energyNum: number = this.maxEnergyNum
 
     private maxPowerupNum: number = 5
-    private powerupNum: number = 5
+    private powerupNum: number = 0
 
     private maxShieldNum: number = 3
     private shieldNum: number = 0
