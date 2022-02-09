@@ -27,6 +27,7 @@ export default class Player extends Phaser.Physics.Matter.Image
         this.initY = y
 
         this.setIgnoreGravity(true)
+        this.setStatic(true)
 
         this.shieldEffect = this.scene.add.image(x, y + 15, TextureKeys.SHIELD_EFFECT)
         this.shieldEffect.setVisible(false)

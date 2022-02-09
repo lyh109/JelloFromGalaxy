@@ -8,11 +8,11 @@ const SHIP_RED_TEXTURE: string[] = [TextureKeys.SHIP_RED1, TextureKeys.SHIP_RED2
 
 export default class Enemy extends Phaser.Physics.Matter.Image
 {
-    isCollided: boolean = false
-    maxHP: number = 4
-    hp: number = this.maxHP
+    private isCollided: boolean = false
+    private maxHP: number = 4
+    private hp: number = this.maxHP
 
-    textures: string[] = SHIP_BLUE_TEXTURE
+    private textures: string[] = SHIP_BLUE_TEXTURE
 
     constructor(scene: Phaser.Scene, x: number, y: number, texture: string = TextureKeys.SHIP_BLUE1)
     {
@@ -21,7 +21,7 @@ export default class Enemy extends Phaser.Physics.Matter.Image
         scene.add.existing(this)
         this.scene = scene
         this.setIgnoreGravity(true)
-        this.setStatic(true)
+        // this.setStatic(true)
 
         if(texture == TextureKeys.SHIP_GREEN1)
         {
