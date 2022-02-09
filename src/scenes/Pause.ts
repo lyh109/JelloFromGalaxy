@@ -1,9 +1,12 @@
 import SceneKeys from "~/consts/SceneKeys"
 import TextureKeys from "~/consts/TextureKeys"
 import EventKeys from "~/consts/EventKeys"
+import SoundKeys from "~/consts/SoundKeys"
 
 export default class Pause extends Phaser.Scene
 {
+    private resumeSound!: Phaser.Sound.BaseSound
+
     constructor()
     {
         super(SceneKeys.Pause)
@@ -39,6 +42,8 @@ export default class Pause extends Phaser.Scene
             repeat: -1
         })
 
+        this.resumeSound = this.sound.add(SoundKeys.S_ON, {volume: 0.1})
+
         GameScene.events.on(EventKeys.PAUSE, () => {
             PauseBG.setVisible(true)
             PauseText.setVisible(true)
@@ -49,6 +54,8 @@ export default class Pause extends Phaser.Scene
         this.input.keyboard.on('keydown-R', () =>{
             if(GameScene.scene.isPaused())
             {
+                this.resumeSound.play()
+
                 PauseBG.setVisible(false)
                 PauseText.setVisible(false)
                 pressRText.setVisible(false)

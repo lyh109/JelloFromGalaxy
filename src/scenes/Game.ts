@@ -34,6 +34,8 @@ export default class Game extends Phaser.Scene
     private score: number = 0
     private scoreText!: Phaser.GameObjects.Text
 
+    private pauseSound!: Phaser.Sound.BaseSound
+
     private resetGame()
     {
         for(const e of this.enemies)
@@ -228,10 +230,13 @@ export default class Game extends Phaser.Scene
         this.laser1Group = new Laser1Pool(this)
         this.laser2Group = new Laser2Pool(this)
         this.laser1Sound = this.sound.add(SoundKeys.S_LASER1, {volume: 0.1})
-        this.laser2Sound = this.sound.add(SoundKeys.S_LASER2, {volume: 0.1}) 
+        this.laser2Sound = this.sound.add(SoundKeys.S_LASER2, {volume: 0.1})
+
+        this.pauseSound = this.sound.add(SoundKeys.S_OFF, {volume: 0.1})
 
         // PAUSE
         this.input.keyboard.on('keydown-ESC', () => {
+            this.pauseSound.play()
             this.events.emit(EventKeys.PAUSE)
         })
 
