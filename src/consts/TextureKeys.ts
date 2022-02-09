@@ -25,6 +25,9 @@ enum TextureKeys
     SHIP_RED3 = 'Ship-red3',
     SHIP_RED4 = 'Ship-red4',
 
+    METEOR1 = 'Meteor1',
+    METEOR2 = 'Meteor2',
+
     LASER1 = 'Laser1',
     LASER2 = 'Laser2',
 

@@ -37,6 +37,9 @@ export default class Preloader extends Phaser.Scene
         this.load.image(TextureKeys.SHIP_RED3, 'enemies/Ship_red_Damaged2.png')
         this.load.image(TextureKeys.SHIP_RED4, 'enemies/Ship_red_Damaged3.png')
 
+        this.load.image(TextureKeys.METEOR1, 'obstacles/meteorBrown_big1.png')
+        this.load.image(TextureKeys.METEOR2, 'obstacles/meteorBrown_big2.png')
+
         this.load.image(TextureKeys.LASER1, 'laser/laserBlue1.png')
         this.load.image(TextureKeys.LASER2, 'laser/laserBlue2.png')
 
