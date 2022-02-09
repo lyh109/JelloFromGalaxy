@@ -34,7 +34,12 @@ export default class Game extends Phaser.Scene
     private score: number = 0
     private scoreText!: Phaser.GameObjects.Text
 
+    private crashSound!: Phaser.Sound.BaseSound
+    private enemyDestroySound!: Phaser.Sound.BaseSound
+
+    private shieldDownSound!: Phaser.Sound.BaseSound
     private pauseSound!: Phaser.Sound.BaseSound
+    private gameoverSound!: Phaser.Sound.BaseSound
 
     private resetGame()
     {
@@ -123,6 +128,8 @@ export default class Game extends Phaser.Scene
 
         if(num == 0)
         {
+            this.gameoverSound.play()
+
             this.cameras.main.shake()
             this.cameras.main.fadeOut()
             this.cameras.main.once(Phaser.Cameras.Scene2D.Events.FADE_OUT_COMPLETE, () => {
@@ -164,6 +171,7 @@ export default class Game extends Phaser.Scene
 
     private destroyEnemy = (num: number, x: number, y: number) =>
     {
+        this.enemyDestroySound.play()
         this.addScore(num)
 
         let item: Item
@@ -232,7 +240,12 @@ export default class Game extends Phaser.Scene
         this.laser1Sound = this.sound.add(SoundKeys.S_LASER1, {volume: 0.1})
         this.laser2Sound = this.sound.add(SoundKeys.S_LASER2, {volume: 0.1})
 
+        this.crashSound = this.sound.add(SoundKeys.S_CRASH, {volume: 0.1})
+        this.enemyDestroySound = this.sound.add(SoundKeys.S_ZAP, {volume: 0.1})
+
+        this.shieldDownSound = this.sound.add(SoundKeys.S_SHIELD_DOWN, {volume: 0.1})
         this.pauseSound = this.sound.add(SoundKeys.S_OFF, {volume: 0.1})
+        this.gameoverSound = this.sound.add(SoundKeys.S_GAME_OVER, {volume: 0.05})
 
         // PAUSE
         this.input.keyboard.on('keydown-ESC', () => {
@@ -281,34 +294,40 @@ export default class Game extends Phaser.Scene
         this.player.setCollidesWith([this.enemyCat, this.itemCat])
 
         this.matter.world.on('collisionstart', (event) => {
-            if(event.pairs[0].bodyA.gameObject.texture.key[0] == 'P'
-                &&event.pairs[0].bodyB.gameObject.texture.key[0] == 'S')
+            for(let i = 0; i < event.pairs.length; ++i)
             {
-                event.pairs[0].bodyB.gameObject.despawn()
-                if(this.player.getShieldNum() > 0)
+                if(event.pairs[i].bodyA.gameObject.texture.key[0] == 'P'
+                    &&event.pairs[i].bodyB.gameObject.texture.key[0] == 'S')
                 {
-                    this.player.setShieldNum(this.player.getShieldNum() - 1)
+                    event.pairs[i].bodyB.gameObject.despawn()
+                    if(this.player.getShieldNum() > 0)
+                    {
+                        this.shieldDownSound.play()
+                        this.player.setShieldNum(this.player.getShieldNum() - 1)
+                    }
+                    else
+                    {
+                        this.crashSound.play()
+                        this.updateEnergy(this.player.getEnergyNum() - 1)
+                    }
                 }
-                else
+                else if(event.pairs[i].bodyA.gameObject.texture.key[0] == 'S'
+                        && event.pairs[i].bodyB.gameObject.texture.key[0] == 'L')
                 {
-                    this.updateEnergy(this.player.getEnergyNum() - 1)
+                    event.pairs[i].bodyA.gameObject.updateHP(event.pairs[i].bodyB.gameObject.getDamage())
+                    event.pairs[i].bodyB.gameObject.laserTween.stop()
+
+                    if(event.pairs[i].bodyB.gameObject.texture.key == TextureKeys.LASER1)
+                        this.laser1Group?.despawn(event.pairs[i].bodyB.gameObject)
+                    else
+                        this.laser2Group?.despawn(event.pairs[i].bodyB.gameObject)
                 }
-            }
-            else if(event.pairs[0].bodyA.gameObject.texture.key[0] == 'S'
-                    && event.pairs[0].bodyB.gameObject.texture.key[0] == 'L')
-            {
-                event.pairs[0].bodyA.gameObject.updateHP(event.pairs[0].bodyB.gameObject.getDamage())
-                event.pairs[0].bodyB.gameObject.laserTween.stop()
-                if(event.pairs[0].bodyB.gameObject.texture.key == TextureKeys.LASER1)
-                    this.laser1Group?.despawn(event.pairs[0].bodyB.gameObject)
-                else
-                    this.laser2Group?.despawn(event.pairs[0].bodyB.gameObject)
-            }
-            else if(event.pairs[0].bodyA.gameObject.texture.key[0] == 'P'
-                    && event.pairs[0].bodyB.gameObject.texture.key[0] == 'I')
-            {
-                event.pairs[0].bodyB.gameObject.getItem()
-                event.pairs[0].bodyB.gameObject.despawn()
+                else if(event.pairs[i].bodyA.gameObject.texture.key[0] == 'P'
+                        && event.pairs[i].bodyB.gameObject.texture.key[0] == 'I')
+                {
+                    event.pairs[i].bodyB.gameObject.getItem()
+                    event.pairs[i].bodyB.gameObject.despawn()
+                }
             }
         })
 

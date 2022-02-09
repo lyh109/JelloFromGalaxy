@@ -1,10 +1,13 @@
 import SceneKeys from "~/consts/SceneKeys"
+import SoundKeys from "~/consts/SoundKeys"
 import TextureKeys from "~/consts/TextureKeys"
 
 export default class Title extends Phaser.Scene
 {
     private background!: Phaser.GameObjects.TileSprite
     private pressText!: Phaser.GameObjects.Text
+
+    private pressSound!: Phaser.Sound.BaseSound
 
     constructor()
     {
@@ -33,7 +36,10 @@ export default class Title extends Phaser.Scene
             repeat: -1
         })
 
+        this.pressSound = this.sound.add(SoundKeys.S_OFF, {volume: 0.1})
+
         this.input.keyboard.on('keydown', () => {
+            this.pressSound.play()
             this.cameras.main.fadeOut()
         })
 

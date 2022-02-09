@@ -61,8 +61,18 @@ export default class Preloader extends Phaser.Scene
         this.load.audio(SoundKeys.S_ON, 'sound/on.mp3')
         this.load.audio(SoundKeys.S_OFF, 'sound/off.mp3')
 
+        this.load.audio(SoundKeys.S_CRASH, 'sound/crash.mp3')
+        this.load.audio(SoundKeys.S_ZAP, 'sound/sfx_zap.mp3')
+
         this.load.audio(SoundKeys.S_LASER1, 'sound/sfx_laser1.mp3')
-        this.load.audio(SoundKeys.S_LASER2, '/sound/sfx_laser2.mp3')
+        this.load.audio(SoundKeys.S_LASER2, 'sound/sfx_laser2.mp3')
+
+        this.load.audio(SoundKeys.S_PILL, 'sound/pill.mp3')
+        this.load.audio(SoundKeys.S_POWERUP_SHIELD, 'sound/sfx_powerup-shield.mp3')
+        this.load.audio(SoundKeys.S_SHIELD_DOWN, 'sound/sfx_shieldDown.mp3')
+        this.load.audio(SoundKeys.S_STAR, 'sound/star.mp3')
+
+        this.load.audio(SoundKeys.S_GAME_OVER, 'sound/gameover.mp3')
     }
 
     create()
