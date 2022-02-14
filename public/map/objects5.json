@@ -1,0 +1,98 @@
+[
+  {
+    "height": 0,
+    "id": 3,
+    "name": "s2",
+    "point": true,
+    "rotation": 0,
+    "type": "",
+    "visible": true,
+    "width": 0,
+    "x": 64,
+    "y": 320
+  },
+  {
+    "height": 0,
+    "id": 7,
+    "name": "s2",
+    "point": true,
+    "rotation": 0,
+    "type": "",
+    "visible": true,
+    "width": 0,
+    "x": 576,
+    "y": 640
+  },
+  {
+    "height": 0,
+    "id": 11,
+    "name": "s0",
+    "point": true,
+    "rotation": 0,
+    "type": "",
+    "visible": true,
+    "width": 0,
+    "x": 320,
+    "y": 640
+  },
+  {
+    "height": 0,
+    "id": 13,
+    "name": "s1",
+    "point": true,
+    "rotation": 0,
+    "type": "",
+    "visible": true,
+    "width": 0,
+    "x": 192,
+    "y": 640
+  },
+  {
+    "height": 0,
+    "id": 14,
+    "name": "s1",
+    "point": true,
+    "rotation": 0,
+    "type": "",
+    "visible": true,
+    "width": 0,
+    "x": 576,
+    "y": 320
+  },
+  {
+    "height": 0,
+    "id": 15,
+    "name": "s1",
+    "point": true,
+    "rotation": 0,
+    "type": "",
+    "visible": true,
+    "width": 0,
+    "x": 448,
+    "y": 640
+  },
+  {
+    "height": 0,
+    "id": 16,
+    "name": "s2",
+    "point": true,
+    "rotation": 0,
+    "type": "",
+    "visible": true,
+    "width": 0,
+    "x": 64,
+    "y": 640
+  },
+  {
+    "height": 0,
+    "id": 17,
+    "name": "s1",
+    "point": true,
+    "rotation": 0,
+    "type": "",
+    "visible": true,
+    "width": 0,
+    "x": 320,
+    "y": 960
+  }
+]
