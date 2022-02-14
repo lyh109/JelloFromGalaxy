@@ -73,31 +73,23 @@ export default class Game extends Phaser.Scene
         if(texKey == TextureKeys.LASER1)
         {
             laser = this.laser1Group.spawn(x, y, texKey)
-            laser.setCollidesWith(this.enemyCat)
-
-            laser.laserTween = this.tweens.add({
-                targets: laser,
-                y: this.scale.height + 10,
-                onComplete: () => {
-                    this.tweens.killTweensOf(laser)
-                    this.laser1Group?.despawn(laser)
-                }
-            })
         }
         else
         {
             laser = this.laser2Group.spawn(x, y, texKey)
-            laser.setCollidesWith(this.enemyCat)
-
-            laser.laserTween = this.tweens.add({
-                targets: laser,
-                y: this.scale.height + 10,
-                onComplete: () => {
-                    this.tweens.killTweensOf(laser)
-                    this.laser2Group?.despawn(laser)
-                }
-            })
         }
+
+        laser.setCollidesWith(this.enemyCat)
+
+        laser.laserTween = this.tweens.add({
+            targets: laser,
+            y: this.scale.height + 10,
+            duration: 800,
+            onComplete: () => {
+                this.tweens.killTweensOf(laser)
+                this.laser1Group?.despawn(laser)
+            }
+        })
         
         if(!laser)
             {
@@ -164,6 +156,34 @@ export default class Game extends Phaser.Scene
     private getShield = () =>
     {
         this.player.setShieldNum(this.player.getMaxShieldNum())
+    }
+
+    private spawnEnemy = (mapName: string, y: number) =>
+    {
+        const objectData = this.cache.json.get(mapName)
+        for(let o of objectData)
+        {
+            let enemy
+            if(o.name[1] == 0)
+            {
+                enemy = new Enemy(this, o.x, o.y + y, TextureKeys.SHIP_BLUE1)
+            }
+            else if(o.name[1] == 1)
+            {
+                enemy = new Enemy(this, o.x, o.y + y, TextureKeys.SHIP_GREEN1)
+            }
+            else if(o.name[1] == 2)
+            {
+                enemy = new Enemy(this, o.x, o.y + y, TextureKeys.SHIP_ORANGE1)
+            }
+            else if(o.name[1] == 3)
+            {
+                enemy = new Enemy(this, o.x, o.y + y, TextureKeys.SHIP_RED1)
+            }
+
+            enemy.setCollisionCategory(this.enemyCat)
+            this.enemies.push(enemy)
+        }
     }
 
     private spawnItem = (x: number, y: number, item: Item) =>
@@ -348,6 +368,13 @@ export default class Game extends Phaser.Scene
     update(time: number, delta: number): void 
     {
         this.background.tilePositionY += 1
+
+        if(this.background.tilePositionY == this.scale.height)
+        {
+            const randNum = Phaser.Math.Between(1, 9)
+            this.spawnEnemy('object' + randNum.toString(), 75 + this.scale.height)
+            this.background.tilePositionY = 0
+        }
 
         if(this.player.getEnergyNum() > 0)
         {
