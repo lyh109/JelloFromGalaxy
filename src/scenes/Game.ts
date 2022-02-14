@@ -351,11 +351,28 @@ export default class Game extends Phaser.Scene
                     else
                         this.laser2Group?.despawn(event.pairs[i].bodyB.gameObject)
                 }
+                else if(event.pairs[i].bodyA.gameObject.texture.key[0] == 'L'
+                        && event.pairs[i].bodyB.gameObject.texture.key[0] == 'S')
+                {
+                    event.pairs[i].bodyB.gameObject.updateHP(event.pairs[i].bodyA.gameObject.getDamage())
+                    event.pairs[i].bodyA.gameObject.laserTween.stop()
+
+                    if(event.pairs[i].bodyA.gameObject.texture.key == TextureKeys.LASER1)
+                        this.laser1Group?.despawn(event.pairs[i].bodyA.gameObject)
+                    else
+                        this.laser2Group?.despawn(event.pairs[i].bodyA.gameObject)
+                }
                 else if(event.pairs[i].bodyA.gameObject.texture.key[0] == 'P'
                         && event.pairs[i].bodyB.gameObject.texture.key[0] == 'I')
                 {
                     event.pairs[i].bodyB.gameObject.getItem()
                     event.pairs[i].bodyB.gameObject.despawn()
+                }
+                else if(event.pairs[i].bodyA.gameObject.texture.key[0] == 'P'
+                        && event.pairs[i].bodyB.gameObject.texture.key[0] == 'M')
+                {
+                    event.pairs[i].bodyB.gameObject.despawn()
+                    this.crash()
                 }
             }
         })
