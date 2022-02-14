@@ -193,19 +193,27 @@ export default class Game extends Phaser.Scene
         this.items.push(item)
     }
 
+    private spawnMeteor = (x: number, y: number, minSize: number, maxSize: number) =>
+    {
+        const meteor = new Meteor(this, x, y, minSize, maxSize)
+        meteor.setCollisionCategory(this.meteorCat)
+        meteor.setCollidesWith([this.playerCat])
+        this.meteors.push(meteor)
+    }
+
     private destroyEnemy = (num: number, x: number, y: number) =>
     {
         this.enemyDestroySound.play()
         this.addScore(num)
 
         let item: Item
-        if(Phaser.Math.Between(1, 10) <= 6)
+        if(Phaser.Math.Between(1, 10) <= 5)
         {
             item = new Pill(this, x, y)
             this.spawnItem(x, y, item)
         }
 
-        if(Phaser.Math.Between(1, 10) <= 6)
+        if(Phaser.Math.Between(1, 10) <= 5)
         {
             item = new PowerUP(this, x, y)
             this.spawnItem(x, y, item)
@@ -230,6 +238,33 @@ export default class Game extends Phaser.Scene
         {
             item = new Star(this, x, y, TextureKeys.STAR_GOLD)
             this.spawnItem(x, y, item)
+        }
+
+        if(Phaser.Math.Between(1, 10) <= 3)
+        {
+            const xPosition = Phaser.Math.FloatBetween(0, this.scale.width)
+
+            this.spawnMeteor(xPosition, this.scale.height + 30, 0.3, 0.8)
+            this.spawnMeteor(xPosition - 50, this.scale.height + 80, 0.3, 0.8)
+            this.spawnMeteor(xPosition + 50, this.scale.height + 80, 0.3, 0.8)
+        }
+        else if(Phaser.Math.Between(1, 10) <= 2)
+        {
+            this.spawnMeteor(Phaser.Math.FloatBetween(0, this.scale.width), this.scale.height + 30, 1, 2)
+        }
+    }
+
+    private crash = () =>
+    {
+        if(this.player.getShieldNum() > 0)
+        {
+            this.shieldDownSound.play()
+            this.player.setShieldNum(this.player.getShieldNum() - 1)
+        }
+        else
+        {
+            this.crashSound.play()
+            this.updateEnergy(this.player.getEnergyNum() - 1)
         }
     }
 
