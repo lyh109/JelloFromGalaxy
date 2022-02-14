@@ -59,7 +59,16 @@ export default class Preloader extends Phaser.Scene
         this.load.image(TextureKeys.GLASS_PANEL, 'ui/glassPanel.png')
         this.load.image(TextureKeys.GLASS_PANEL_PROJECTION, 'ui/glassPanel_projection.png')
 
-        this.load.json('object', 'map/objects0.json')
+        this.load.json('object0', 'map/objects0.json')
+        this.load.json('object1', 'map/objects1.json')
+        this.load.json('object2', 'map/objects2.json')
+        this.load.json('object3', 'map/objects3.json')
+        this.load.json('object4', 'map/objects4.json')
+        this.load.json('object5', 'map/objects5.json')
+        this.load.json('object6', 'map/objects6.json')
+        this.load.json('object7', 'map/objects7.json')
+        this.load.json('object8', 'map/objects8.json')
+        this.load.json('object9', 'map/objects9.json')
 
         this.load.audio(SoundKeys.S_ON, 'sound/on.mp3')
         this.load.audio(SoundKeys.S_OFF, 'sound/off.mp3')
