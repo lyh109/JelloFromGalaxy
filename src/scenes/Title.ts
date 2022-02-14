@@ -38,7 +38,7 @@ export default class Title extends Phaser.Scene
 
         this.pressSound = this.sound.add(SoundKeys.S_OFF, {volume: 0.1})
 
-        this.input.keyboard.on('keydown', () => {
+        this.input.keyboard.once('keydown', () => {
             this.pressSound.play()
             this.cameras.main.fadeOut()
         })
