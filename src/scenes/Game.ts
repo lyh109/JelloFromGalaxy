@@ -321,36 +321,15 @@ export default class Game extends Phaser.Scene
 
         this.playerCat = this.matter.world.nextCategory()
         this.enemyCat = this.matter.world.nextCategory()
+        this.meteorCat = this.matter.world.nextCategory()
         this.itemCat = this.matter.world.nextCategory()
 
         this.player.setCollisionCategory(this.playerCat)
 
-        const objectData = this.cache.json.get('object')
-        for(let o of objectData)
-        {
-            let enemy
-            if(o.name[1] == 0)
-            {
-                enemy = new Enemy(this, o.x, o.y, TextureKeys.SHIP_BLUE1)
-            }
-            else if(o.name[1] == 1)
-            {
-                enemy = new Enemy(this, o.x, o.y, TextureKeys.SHIP_GREEN1)
-            }
-            else if(o.name[1] == 2)
-            {
-                enemy = new Enemy(this, o.x, o.y, TextureKeys.SHIP_ORANGE1)
-            }
-            else if(o.name[1] == 3)
-            {
-                enemy = new Enemy(this, o.x, o.y, TextureKeys.SHIP_RED1)
-            }
+        this.spawnEnemy('object0', 75)
+        this.spawnEnemy('object1', 75 + height)
 
-            enemy.setCollisionCategory(this.enemyCat)
-            this.enemies.push(enemy)
-        }
-
-        this.player.setCollidesWith([this.enemyCat, this.itemCat])
+        this.player.setCollidesWith([this.enemyCat, this.meteorCat, this.itemCat])
 
         this.matter.world.on('collisionstart', (event) => {
             for(let i = 0; i < event.pairs.length; ++i)
@@ -359,16 +338,7 @@ export default class Game extends Phaser.Scene
                     &&event.pairs[i].bodyB.gameObject.texture.key[0] == 'S')
                 {
                     event.pairs[i].bodyB.gameObject.despawn()
-                    if(this.player.getShieldNum() > 0)
-                    {
-                        this.shieldDownSound.play()
-                        this.player.setShieldNum(this.player.getShieldNum() - 1)
-                    }
-                    else
-                    {
-                        this.crashSound.play()
-                        this.updateEnergy(this.player.getEnergyNum() - 1)
-                    }
+                    this.crash()
                 }
                 else if(event.pairs[i].bodyA.gameObject.texture.key[0] == 'S'
                         && event.pairs[i].bodyB.gameObject.texture.key[0] == 'L')
