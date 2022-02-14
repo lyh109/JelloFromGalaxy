@@ -72,7 +72,7 @@ export default class Enemy extends Phaser.Physics.Matter.Image
 
         this.hp -= damage
 
-        if(this.hp == 0)
+        if(this.hp <= 0)
         {
             this.scene.events.emit(EventKeys.DESTROY_ENEMY, 10 * this.maxHP, this.x, this.y)
             this.despawn()
