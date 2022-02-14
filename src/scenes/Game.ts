@@ -6,6 +6,7 @@ import Player from "~/game/Player"
 import { Laser1Pool, Laser2Pool } from "~/game/Laser"
 
 import Enemy from "~/game/Enemy"
+import Meteor from "~/game/Meteor"
 
 import { Item, Pill, PowerUP, Shield, Star } from "~/game/Item"
 import SoundKeys from "~/consts/SoundKeys"
@@ -27,6 +28,9 @@ export default class Game extends Phaser.Scene
 
     private enemies: Enemy[] = []
     private enemyCat: any
+
+    private meteors: Meteor[] = []
+    private meteorCat: any
 
     private items: Item[] = []
     private itemCat: any
@@ -402,6 +406,18 @@ export default class Game extends Phaser.Scene
             else
             {
                 i.update()
+            }
+        }
+
+        for(const m of this.meteors)
+        {
+            if(m.IsCollided())
+            {
+                m.destroy()
+            }
+            else
+            {
+                m.update()
             }
         }
     }
