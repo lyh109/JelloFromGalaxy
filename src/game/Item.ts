@@ -23,7 +23,6 @@ export class Item extends Phaser.Physics.Matter.Image
 
         this.setIgnoreGravity(true)
         // this.setStatic(true)
-        this.setBounce(1)
     }
 
     update()
@@ -31,8 +30,12 @@ export class Item extends Phaser.Physics.Matter.Image
         this.x -= this.xSpeed
         this.y -= this.ySpeed
 
-        if(this.x < -10 || this.x > this.scene.scale.width + 10
-            || this.y < -10 || this.y > this.scene.scale.height + 10)
+        if(this.x <= 17 || this.x >= this.scene.scale.width - 17)
+        {
+            this.xSpeed *= -1
+        }
+
+        if(this.y < -10 || this.y > this.scene.scale.height + 10)
         {
             this.despawn()
         }
